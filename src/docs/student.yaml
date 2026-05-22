@@ -1,0 +1,73 @@
+/student/register:
+  post:
+    summary: Register a new student
+    tags:
+      - Students
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+              - password
+              - firstName
+              - lastName
+              - age
+              - origin
+              - timeZone
+              - preferedPriceMin
+              - preferedPriceMax
+              - subjects
+              - languages
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+              firstName:
+                type: string
+              lastName:
+                type: string
+              age:
+                type: number
+              origin:
+                type: string
+              timeZone:
+                type: string
+              preferedPriceMin:
+                type: number
+              preferedPriceMax:
+                type: number
+
+              subjects:
+                type: array
+                items:
+                  type: string
+
+              languages:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    level:
+                      type: number
+                      minimum: 0
+                      maximum: 5
+                    languageType:
+                      type: string
+                      enum:
+                        - SPEAK
+                        - TEACHE
+                        - LEARN
+    responses:
+      200:
+        description: Successful registration
+      400:
+        description: Invalid input
+      500:
+        description: Server error
+
