@@ -71,3 +71,30 @@
       500:
         description: Server error
 
+/student/login:
+  post:
+    summary: login a student
+    tags:
+      - Students
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+
+    responses:
+      200:
+        description: Successful registration
+      400:
+        description: Invalid input
+      500:
+        description: Server error

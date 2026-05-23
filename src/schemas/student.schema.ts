@@ -19,3 +19,8 @@ export const StudentRegisterSchema = z.object({
     }),
   ),
 });
+
+export const StudentLoginSchema = z.object({
+  email: z.email(),
+  password: z.string().min(6, "Password required"),
+});
