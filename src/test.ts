@@ -22,11 +22,7 @@ async function showAllUsers() {
 
 showAllUsers().then(() => process.exit(0));
 
-// ####### Very Important Line ! ###############
-// bcrypt.compare(plainPassword, hashedPassword)
 
-//Note: JWT token will be recived in the header every time fetching
-// an endpoint that is PROTECTED!
 
 // Dealing with the image from the user
 // ✔️ Use Multer to receive the file

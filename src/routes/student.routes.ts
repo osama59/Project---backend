@@ -6,15 +6,22 @@ import {
   StudentRegisterSchema,
 } from "../schemas/student.schema";
 import jwt from "jsonwebtoken";
+
 const router = Router();
 
 // POST /student/register
 router.post("/register", async (req, res) => {
-  const data = getData(StudentRegisterSchema, req, res);
+  const data = getData(StudentRegisterSchema, req);
+  if (!data) return res.status(400).json({ error: "Invalid input" });
 
   try {
-    const hashedPw = await bcrypt.hash(data.password, 10);
+    // Check duplicate email
+    const exists = await prisma.user.findUnique({
+      where: { email: data.email },
+    });
+    if (exists) return res.status(400).json({ error: "Email already exists" });
 
+    const hashedPw = await bcrypt.hash(data.password, 10);
     const result = await prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
         data: {
@@ -37,7 +44,7 @@ router.post("/register", async (req, res) => {
         },
       });
 
-      const languages = await tx.language.createMany({
+      await tx.language.createMany({
         data: data.languages.map((lang: any) => ({
           userId: user.id,
           name: lang.name,
@@ -46,7 +53,7 @@ router.post("/register", async (req, res) => {
         })),
       });
 
-      return { user, student, languages };
+      return { user, student };
     });
 
     res.json(result);
@@ -58,41 +65,34 @@ router.post("/register", async (req, res) => {
 
 // POST /student/login
 router.post("/login", async (req, res) => {
-  const data = getData(StudentLoginSchema, req, res);
-  if (!data) return; // stop if validation failed
+  const data = getData(StudentLoginSchema, req);
+  if (!data) return res.status(400).json({ error: "Invalid input" });
 
   const { email, password } = data;
 
   try {
-    // 1. Find user
     const user = await prisma.user.findUnique({
       where: { email },
       include: { student: true },
     });
 
-    if (!user) {
+    if (!user || !user.student) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
-    // 2. Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
-    // 3. Create JWT payload (minimal)
-    const payload = {
-      id: user.id,
-      role: "STUDENT",
-    };
+    const token = jwt.sign(
+      { id: user.id, role: user.role },
+      process.env.ACCESS_TOKEN_SECRET!,
+      { expiresIn: "7d" },
+    );
 
-    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
-      expiresIn: "7d",
-    });
-
-    // 4. Return clean response
-    return res.json({
-      accessToken,
+    res.json({
+      token,
       user: {
         id: user.id,
         email: user.email,
@@ -103,20 +103,43 @@ router.post("/login", async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: "Login failed" });
+    res.status(500).json({ error: "Login failed" });
   }
 });
 
-export default router;
+router.get("/me", authenticateToken, async (req: any, res) => {
+  console.log("Token is correct ! : ", req.user.id);
 
-function getData(schema: any, req: any, res: any) {
+  res.json({
+    mesage:
+      "Auth middle works! here the id for good mesaure :) : " + req.user.id,
+  });
+});
+
+function getData(schema: any, req: any) {
   const parsed = schema.safeParse(req.body);
 
   if (!parsed.success) {
-    console.error("error: Invalid input");
-    return res.status(400).send("error");
+    return null;
   }
 
-  const data = parsed.data;
-  return data;
+  return parsed.data;
+}
+
+export default router;
+
+// This will be passed as middleware when accessing private content
+
+export function authenticateToken(req: any, res: any, next: any) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader?.split(" ")[1];
+
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!, (err: any, user: any) => {
+    if (err) return res.sendStatus(403);
+
+    req.user = user;
+    next();
+  });
 }
