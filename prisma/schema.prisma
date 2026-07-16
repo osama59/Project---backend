@@ -14,8 +14,8 @@ datasource db {
 
 model User {
   id              String     @id @default(uuid())
-  password        String
   email           String     @unique
+  password        String
   firstName       String
   lastName        String
   age             Int
@@ -37,6 +37,8 @@ model Student {
   preferedPriceMin    Float
   preferedPriceMax    Float
   studentRateTeachers StudentRateTeacher[]
+
+  sessions Session[]
 }
 
 model Teacher {
@@ -49,6 +51,8 @@ model Teacher {
   hourPrice           Float
   studentRateTeachers StudentRateTeacher[]
   availabilities      Availability[]
+
+  sessions Session[]
 }
 
 model Language {
@@ -62,8 +66,9 @@ model Language {
 
 model Availability {
   id        String  @id @default(uuid())
-  userId    String
   day       Days
+  fromTime DateTime @db.Time(0)
+  toTime DateTime @db.Time(0)
   teacher   Teacher @relation(fields: [teacherId], references: [id])
   teacherId String
 }
@@ -77,6 +82,25 @@ model StudentRateTeacher {
   createdAt DateTime @default(now())
 }
 
+model Session {
+  id          String   @id @default(uuid())
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id])
+  teacherId   String
+  teacher     Teacher  @relation(fields: [teacherId], references: [id])
+  startTime   DateTime
+  endTime     DateTime
+  status      SessionStatus @default(PENDING)
+  createdAt   DateTime @default(now())
+}
+
+enum SessionStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
 enum Role {
   STUDENT
   TEACHER
@@ -85,7 +109,7 @@ enum Role {
 
 enum LanguageType {
   SPEAK
-  TEACHE
+  TEACH
   LEARN
 }
 

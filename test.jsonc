@@ -1,0 +1,111 @@
+[
+    {
+        // Register JSON request
+        "email": "test@example.com",
+        "password": "secure123",
+        "firstName": "Jane",
+        "lastName": "Doe",
+        "age": 30,
+        "origin": "USA",
+        "timeZone": "America/New_York",
+        "preferedPriceMin": 20,
+        "preferedPriceMax": 100,
+        "subjects": [
+            "Math",
+            "Science"
+        ],
+        "languages": [
+            {
+                "name": "English",
+                "level": 5,
+                "languageType": "SPEAK"
+            },
+            {
+                "name": "French",
+                "level": 3,
+                "languageType": "LEARN"
+            }
+        ]
+    },
+
+    {
+        // Login Response with jwt Token
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjlhMzgxOWM2LWM2MzctNDY4ZS1hYjMwLWViMjYxMWNiNjNkNiIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzgzODQ3Mzg5LCJleHAiOjE3ODQ0NTIxODl9.k9kP2aSfwotFSvHllKCEFuGUaCBgx7eAUyytWNCFyJI",
+        "user": {
+            "id": "9a3819c6-c637-468e-ab30-eb2611cb63d6",
+            "email": "osamatest@example.com",
+            "firstName": "Jane",
+            "lastName": "Doe"
+        },
+        "student": {
+            "id": "8dba5b67-8768-4d00-96f6-230dc779cdb2",
+            "userId": "9a3819c6-c637-468e-ab30-eb2611cb63d6",
+            "preferedPriceMin": 20,
+            "preferedPriceMax": 100
+        }
+    },
+    //Teacher registiration:
+    {
+    "email": "johndoe@example.com",
+    "password": "secure123",
+    "firstName": "John",
+    "lastName": "Doe",
+    "age": 30,
+    "origin": "USA",
+    "timeZone": "America/New_York",
+    "certificateUrl": "https://example.com/certificate.pdf",
+    "introVideoUrl": "https://youtu.be/abc123",
+    "introText": "I am a math expert with 5 years of experience!",
+    "hourPrice": 25.50,
+    "subjects": ["Math", "Physics"],
+    "languages": [
+        { "name": "English", "level": 5, "languageType": "TEACH" },
+        { "name": "Spanish", "level": 4, "languageType": "SPEAK" }
+    ],
+    "availability": [
+            { "dayOfWeek": "MONDAY", "fromTime": "09:00", "toTime": "12:00" },
+            { "dayOfWeek": "TUESDAY", "fromTime": "14:00", "toTime": "17:00" },
+            { "dayOfWeek": "WEDNESDAY", "fromTime": "10:00", "toTime": "15:00" }
+        ]
+    },
+
+
+
+    //Teacher Register
+{
+  "email": "teacher2@test.com",
+  "password": "secure123",
+  "firstName": "Jane",
+  "lastName": "Smith",
+  "age": 28,
+  "origin": "USA",
+  "timeZone": "America/New_York",
+  "subjects": ["Math", "Physics"],
+  "role":"TEACHER",
+  "languages": [
+    {
+      "name": "Korean",
+      "level": 5,
+      "languageType": "TEACH"
+    }
+  ],
+  "certificateImageUrl": "https://example.com/cert.jpg",
+  "introVideoUrl": "https://example.com/video.mp4",
+  "introText": "I love teaching kOREAN!",
+  "hourPrice": 30.50,
+  "availability": [
+    {
+      "dayOfWeek": "MONDAY",
+      "fromTime": "09:00",
+      "toTime": "12:00"
+    },
+    {
+      "dayOfWeek": "WEDNESDAY",
+      "fromTime": "14:00",
+      "toTime": "17:00"
+    }
+  ]
+}
+
+
+]
