@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { prisma } from "../prisma";
 import { authenticateToken, getData } from "./helper";
-import { SessionSchema } from "../schemas/session.schema";
-import { id } from "zod/locales";
-import { includes } from "zod";
+import {
+  SessionRateSchema,
+  SessionSchema,
+  SessionUpdateSchema,
+} from "../schemas/session.schema";
 const router = Router();
 
 // POST session/book
@@ -191,6 +193,107 @@ router.get("/teacher", authenticateToken, async (req: any, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch sessions" });
+  }
+});
+
+// PATCH  session/:id // this one the TEACHER uses it
+router.patch("/:id", authenticateToken, async (req: any, res) => {
+  try {
+    const teacher = await prisma.teacher.findUnique({
+      where: { userId: req.user.id },
+    });
+
+    if (!teacher) {
+      return res.status(404).json({ error: "Teacher profile not found" });
+    }
+
+    const { id } = req.params;
+
+    const existingSession = await prisma.session.findUnique({
+      where: { id: id },
+    });
+
+    if (!existingSession) {
+      return res.status(404).json({ error: "Session not found" });
+    }
+
+    if (existingSession.teacherId !== teacher.id) {
+      return res
+        .status(403)
+        .json({ error: "You are not the teacher for this session" });
+    }
+
+    const data = getData(SessionUpdateSchema, req);
+    if (!data) {
+      return res.status(400).json({ error: "Invalid input" });
+    }
+
+    const updatedSession = await prisma.session.update({
+      where: { id: id },
+      data: { status: data.status },
+    });
+
+    res.json(updatedSession);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to update session" });
+  }
+});
+
+//POST /session/:id/rate // this one the STUDENT uses it
+router.post("/:id/rate", authenticateToken, async (req: any, res) => {
+  //Body: { rating: 5, review: "Great teacher!" }
+  try {
+    const data = getData(SessionRateSchema, req);
+    if (!data) {
+      return res.status(400).json({ error: "Invalid input" });
+    }
+
+    const student = await prisma.student.findUnique({
+      where: { userId: req.user.id },
+    });
+
+    if (!student) {
+      return res.status(404).json({ error: "Student profile not found" });
+    }
+
+    const { id } = req.params;
+
+    const existingSession = await prisma.session.findUnique({
+      where: { id: id, studentId: student.id },
+    });
+
+    if (!existingSession) {
+      return res.status(404).json({ error: "Session not found" });
+    }
+
+    if (existingSession.status != "COMPLETED") {
+      return res.status(400).json({ error: "Session didn't complete yet!" });
+    }
+
+    const existingRate = await prisma.rating.findUnique({
+      where: { sessionId: id },
+    });
+    if (existingRate) {
+      return res
+        .status(400)
+        .json({ error: "this Session already been rated !" });
+    }
+
+    const newRating = await prisma.rating.create({
+      data: {
+        studentId: student.id,
+        teacherId: existingSession.teacherId,
+        sessionId: existingSession.id,
+        rating: data.rating,
+        review: data.review,
+      },
+    });
+
+    res.status(201).json(newRating);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to create rating" });
   }
 });
 

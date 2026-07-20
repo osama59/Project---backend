@@ -39,6 +39,8 @@ model Student {
   studentRateTeachers StudentRateTeacher[]
 
   sessions Session[]
+
+  ratings Rating[]
 }
 
 model Teacher {
@@ -53,6 +55,8 @@ model Teacher {
   availabilities      Availability[]
 
   sessions Session[]
+
+  ratings Rating[]
 }
 
 model Language {
@@ -92,6 +96,22 @@ model Session {
   endTime     DateTime
   status      SessionStatus @default(PENDING)
   createdAt   DateTime @default(now())
+
+  ratings Rating[]
+}
+
+
+model Rating {
+  id        String   @id @default(uuid())
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id])
+  teacherId String
+  teacher   Teacher  @relation(fields: [teacherId], references: [id])
+  sessionId String   @unique // One rating per session
+  session   Session  @relation(fields: [sessionId], references: [id])
+  rating    Int      // 1-5
+  review    String?
+  createdAt DateTime @default(now())
 }
 
 enum SessionStatus {
