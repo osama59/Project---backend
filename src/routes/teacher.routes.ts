@@ -180,4 +180,59 @@ router.get("/teachers", async (req: any, res) => {
   }
 });
 
+// GET /teacher/:id/availability?date=2026-07-20
+router.get("/:id/availability", async (req: any, res) => {
+  try {
+    const { id } = req.params;
+    const { date } = req.query;
+
+    if (!date) {
+      return res.status(400).json({ error: "Date is required" });
+    }
+
+    // Convert date string to Date object
+    const selectedDate = new Date(date as string);
+    const dayOfWeek = selectedDate
+      .toLocaleDateString("en-US", { weekday: "long" })
+      .toUpperCase();
+
+    // Fetch teacher's availability for that day
+    // Here I think I have to fetch for the next 7 days instead ! 
+    const availability = await prisma.availability.findMany({
+      where: {
+        teacherId: id,
+        day: dayOfWeek as any, // "MONDAY", "TUESDAY", etc.
+      },
+    });
+
+    // Fetch booked sessions for that teacher on that date
+    const startOfDay = new Date(selectedDate);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(selectedDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const bookedSessions = await prisma.session.findMany({
+      where: {
+        teacherId: id,
+        startTime: {
+          gte: startOfDay,
+          lte: endOfDay,
+        },
+        status: {
+          not: "CANCELLED", // Optional: exclude cancelled sessions
+        },
+      },
+    });
+
+    res.json({
+      availability,
+      bookedSessions,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch availability" });
+  }
+});
+
 export default router;

@@ -1,6 +1,7 @@
 import express from "express";
 import studentRouts from "./routes/student.routes";
 import teacherRouts from "./routes/teacher.routes";
+import sessionRouts from "./routes/session.routes";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./swagger";
 
@@ -10,5 +11,6 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(express.json());
 app.use("/student", studentRouts);
 app.use("/teacher", teacherRouts);
+app.use("/session", sessionRouts);
 
 export default app;
