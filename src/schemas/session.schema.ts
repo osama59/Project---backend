@@ -8,7 +8,7 @@ export const SessionSchema = z.object({
 });
 
 export const SessionUpdateSchema = z.object({
-  status: z.enum(["CONFIRMED", "CANCELLED"]),
+  status: z.enum(["CONFIRMED", "CANCELLED" , "COMPLETED"]),
 });
 
 export const SessionRateSchema = z.object({

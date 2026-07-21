@@ -106,6 +106,45 @@
     }
   ]
 }
-
-
 ]
+
+/*
+ bun run ./prisma/seed.ts 
+🌱 Seeding database...
+🧹 Cleaned up old data.
+✅ Created teacher: Amely Mraz (Amely_Mraz@gmail.com)
+✅ Created teacher: Kristina Heaney (Kristina_Heaney98@yahoo.com)
+✅ Created teacher: Viola Hilll (Viola_Hilll94@yahoo.com)
+✅ Created teacher: Taurean Jacobson (Taurean.Jacobson23@gmail.com)
+✅ Created teacher: Elvie Nicolas (Elvie_Nicolas74@gmail.com)
+✅ Created teacher: Evelyn Herzog (Evelyn.Herzog@yahoo.com)
+✅ Created teacher: Russell Spencer (Russell.Spencer81@yahoo.com)
+✅ Created teacher: Gary Murazik (Gary_Murazik@hotmail.com)
+✅ Created teacher: Ramiro Hauck (Ramiro_Hauck88@yahoo.com)
+✅ Created teacher: Bette McLaughlin-Rice (Bette_McLaughlin-Rice39@yahoo.com)
+✅ Created teacher: Eunice Mraz (Eunice.Mraz@hotmail.com)
+✅ Created teacher: Joanne Vandervort (Joanne_Vandervort@gmail.com)
+✅ Created teacher: Louvenia Cole (Louvenia_Cole41@yahoo.com)
+✅ Created teacher: Elaine Quitzon (Elaine.Quitzon81@gmail.com)
+✅ Created teacher: Ernest Wisozk (Ernest.Wisozk@yahoo.com)
+✅ Created teacher: Giovanny Romaguera (Giovanny_Romaguera70@gmail.com)
+✅ Created teacher: Eden Armstrong (Eden.Armstrong3@gmail.com)
+✅ Created teacher: Jairo Haag-Morar (Jairo.Haag-Morar5@yahoo.com)
+✅ Created teacher: Kelley Douglas (Kelley.Douglas@yahoo.com)
+✅ Created teacher: Marques Reichel (Marques.Reichel5@gmail.com)
+✅ Created teacher: Gabriel Moen (Gabriel.Moen90@hotmail.com)
+✅ Created teacher: Marty Torphy (Marty_Torphy@yahoo.com)
+✅ Created teacher: Giuseppe Larson (Giuseppe.Larson@gmail.com)
+✅ Created teacher: Oral Feeney (Oral.Feeney54@gmail.com)
+✅ Created teacher: Cheyenne McCullough (Cheyenne.McCullough@yahoo.com)
+✅ Created teacher: Domenic Rau (Domenic.Rau46@hotmail.com)
+✅ Created teacher: Ian Schneider (Ian.Schneider@hotmail.com)
+✅ Created teacher: Trevor Conroy (Trevor_Conroy88@hotmail.com)
+✅ Created teacher: Fannie Larson (Fannie.Larson26@yahoo.com)
+✅ Created teacher: Jesus Gleichner (Jesus.Gleichner99@gmail.com)
+🎉 Seeding complete! 30 teachers created.
+PS C:\Users\HP\Desktop\Project - backend> 
+
+
+
+*/

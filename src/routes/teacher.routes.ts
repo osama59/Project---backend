@@ -147,11 +147,22 @@ router.get("/me", authenticateToken, async (req: any, res) => {
   }
 });
 
-// GET /teacher/teachers
-router.get("/teachers", async (req: any, res) => {
+// GET /teacher/teachers?page=1&limit=10
+router.get("/teachers", authenticateToken, async (req: any, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const userId = req.user.id;
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+
+      include: { student: true, languages: true },
+    });
+
     const teachers = await prisma.teacher.findMany({
-      take: 10,
+      skip: (page - 1) * limit,
+      take: limit,
       include: {
         user: {
           select: {
@@ -197,7 +208,7 @@ router.get("/:id/availability", async (req: any, res) => {
       .toUpperCase();
 
     // Fetch teacher's availability for that day
-    // Here I think I have to fetch for the next 7 days instead ! 
+    // Here I think I have to fetch for the next 7 days instead !
     const availability = await prisma.availability.findMany({
       where: {
         teacherId: id,

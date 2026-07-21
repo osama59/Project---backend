@@ -31,12 +31,11 @@ model User {
 }
 
 model Student {
-  id                  String               @id @default(uuid())
-  userId              String               @unique
-  user                User                 @relation(fields: [userId], references: [id])
-  preferedPriceMin    Float
-  preferedPriceMax    Float
-  studentRateTeachers StudentRateTeacher[]
+  id               String @id @default(uuid())
+  userId           String @unique
+  user             User   @relation(fields: [userId], references: [id])
+  preferedPriceMin Float
+  preferedPriceMax Float
 
   sessions Session[]
 
@@ -44,14 +43,13 @@ model Student {
 }
 
 model Teacher {
-  id                  String               @id @default(uuid())
-  userId              String               @unique
-  user                User                 @relation(fields: [userId], references: [id])
+  id                  String         @id @default(uuid())
+  userId              String         @unique
+  user                User           @relation(fields: [userId], references: [id])
   certificateImageUrl String?
   introText           String
   introVideoUrl       String
   hourPrice           Float
-  studentRateTeachers StudentRateTeacher[]
   availabilities      Availability[]
 
   sessions Session[]
@@ -69,37 +67,27 @@ model Language {
 }
 
 model Availability {
-  id        String  @id @default(uuid())
-  day       Days
-  fromTime DateTime @db.Time(0)
-  toTime DateTime @db.Time(0)
-  teacher   Teacher @relation(fields: [teacherId], references: [id])
-  teacherId String
-}
-
-model StudentRateTeacher {
   id        String   @id @default(uuid())
-  teacherId String
+  day       Days
+  fromTime  DateTime @db.Time(0)
+  toTime    DateTime @db.Time(0)
   teacher   Teacher  @relation(fields: [teacherId], references: [id])
-  studentId String
-  student   Student  @relation(fields: [studentId], references: [id])
-  createdAt DateTime @default(now())
+  teacherId String
 }
 
 model Session {
-  id          String   @id @default(uuid())
-  studentId   String
-  student     Student  @relation(fields: [studentId], references: [id])
-  teacherId   String
-  teacher     Teacher  @relation(fields: [teacherId], references: [id])
-  startTime   DateTime
-  endTime     DateTime
-  status      SessionStatus @default(PENDING)
-  createdAt   DateTime @default(now())
+  id        String        @id @default(uuid())
+  studentId String
+  student   Student       @relation(fields: [studentId], references: [id])
+  teacherId String
+  teacher   Teacher       @relation(fields: [teacherId], references: [id])
+  startTime DateTime
+  endTime   DateTime
+  status    SessionStatus @default(PENDING)
+  createdAt DateTime      @default(now())
 
   ratings Rating[]
 }
-
 
 model Rating {
   id        String   @id @default(uuid())
@@ -109,7 +97,7 @@ model Rating {
   teacher   Teacher  @relation(fields: [teacherId], references: [id])
   sessionId String   @unique // One rating per session
   session   Session  @relation(fields: [sessionId], references: [id])
-  rating    Int      // 1-5
+  rating    Int // 1-5
   review    String?
   createdAt DateTime @default(now())
 }
