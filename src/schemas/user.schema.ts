@@ -18,6 +18,7 @@ export const UserBaseSchema = z.object({
       languageType: z.enum(["SPEAK", "TEACH", "LEARN"]),
     }),
   ),
+  status: z.enum(["PENDING", "CONFIRMED", "APPROVED", "REJECTED", "SUSBENDED"]),
 });
 
 export const LoginSchema = z.object({

@@ -1,7 +1,10 @@
 import { Router } from "express";
 import { prisma } from "../prisma";
 import bcrypt from "bcryptjs";
-import { StudentRegisterSchema } from "../schemas/student.schema";
+import {
+  StudentRegisterSchema,
+  StudentUpdateSchema,
+} from "../schemas/student.schema";
 import { LoginSchema } from "../schemas/user.schema";
 import jwt from "jsonwebtoken";
 import { authenticateToken, getData } from "./helper";
@@ -109,8 +112,6 @@ router.post("/login", async (req, res) => {
 // GET /student/me
 router.get("/me", authenticateToken, async (req: any, res) => {
   const userId = req.user.id;
-
-  console.log("Token is correct ! : ", userId);
   const user = await prisma.user.findUnique({
     where: { id: userId },
     include: { student: true, languages: true },
@@ -125,6 +126,65 @@ router.get("/me", authenticateToken, async (req: any, res) => {
   console.log("user: ", user);
 
   res.json(userWithoutPwd);
+});
+
+// PATCH /student/profile
+router.patch("/profile", authenticateToken, async (req: any, res) => {
+  try {
+    const data = getData(StudentUpdateSchema, req);
+    if (!data) return res.status(400).json({ error: "Invalid input" });
+
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      include: { student: true, languages: true },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "user not found" });
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      const updatedUser = await tx.user.update({
+        where: { id: user.id },
+        data: {
+          email: data.email,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          age: data.age,
+          origin: data.origin,
+          timeZone: data.timeZone,
+          subjects: data.subjects,
+        },
+      });
+
+      const updatedStudent = await tx.student.update({
+        where: { userId: user.id },
+        data: {
+          preferedPriceMax: data.preferedPriceMax,
+          preferedPriceMin: data.preferedPriceMin,
+        },
+      });
+
+      await tx.language.deleteMany({
+        where: { userId: user.id },
+      });
+
+      await tx.language.createMany({
+        data: data.languages.map((lang: any) => ({
+          userId: user.id,
+          name: lang.name,
+          level: lang.level,
+          languageType: lang.languageType,
+        })),
+      });
+      return { updatedStudent, updatedUser };
+    });
+
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to update profile" });
+  }
 });
 
 export default router;

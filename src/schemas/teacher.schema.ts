@@ -14,7 +14,7 @@ const DayOfWeekEnum = z.enum([
 
 // 🔹 Define a single availability slot
 const AvailabilitySlotSchema = z.object({
-  dayOfWeek: DayOfWeekEnum,
+  day: DayOfWeekEnum,
   fromTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
     message: "Invalid time format. Use HH:mm (e.g., 09:00)",
   }),
@@ -25,6 +25,28 @@ const AvailabilitySlotSchema = z.object({
 
 export const TeacherRegisterSchema = UserBaseSchema.extend({
   certificateImageUrl: z.url().optional(),
+  introVideoUrl: z.url().optional(),
+  introText: z.string(),
+  hourPrice: z.number().positive(),
+  availability: z.array(AvailabilitySlotSchema),
+});
+
+export const TeacherUpdateSchema = z.object({
+  email: z.email(),
+  firstName: z.string(),
+  lastName: z.string(),
+  age: z.number(),
+  origin: z.string(),
+  profileImageUrl: z.url().optional(),
+  timeZone: z.string(),
+  subjects: z.array(z.string()),
+  languages: z.array(
+    z.object({
+      name: z.string(),
+      level: z.number().min(0).max(5),
+      languageType: z.enum(["SPEAK","TEACH"]),
+    }),
+  ),
   introVideoUrl: z.url().optional(),
   introText: z.string(),
   hourPrice: z.number().positive(),

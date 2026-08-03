@@ -28,6 +28,7 @@ model User {
   createdAt       DateTime   @default(now())
   languages       Language[]
   subjects        String[]
+  status          UserStatus @default(PENDING)
 }
 
 model Student {
@@ -119,6 +120,14 @@ enum LanguageType {
   SPEAK
   TEACH
   LEARN
+}
+
+enum UserStatus {
+  PENDING //When user first sign up
+  CONFIRMED //Email confirmed 
+  APPROVED //teacher approved 
+  REJECTED //teacher rejected 
+  SUSBENDED // user susbended
 }
 
 enum Days {
