@@ -29,6 +29,7 @@ model User {
   languages       Language[]
   subjects        String[]
   status          UserStatus @default(PENDING)
+  balance         Float      @default(0.0)
 }
 
 model Student {
@@ -41,6 +42,8 @@ model Student {
   sessions Session[]
 
   ratings Rating[]
+
+  transactions Transaction[]
 }
 
 model Teacher {
@@ -56,6 +59,8 @@ model Teacher {
   sessions Session[]
 
   ratings Rating[]
+
+  transactions Transaction[]
 }
 
 model Language {
@@ -88,6 +93,8 @@ model Session {
   createdAt DateTime      @default(now())
 
   ratings Rating[]
+
+  transactions Transaction[]
 }
 
 model Rating {
@@ -101,6 +108,29 @@ model Rating {
   rating    Int // 1-5
   review    String?
   createdAt DateTime @default(now())
+}
+
+model Transaction {
+  id              String            @id @default(uuid())
+  sessionId       String            @unique
+  session         Session           @relation(fields: [sessionId], references: [id])
+  studentId       String
+  student         Student           @relation(fields: [studentId], references: [id])
+  teacherId       String
+  teacher         Teacher           @relation(fields: [teacherId], references: [id])
+  scheduledAmount Float // Total based on scheduled duration (e.g., $30)
+  actualAmount    Float? // Final amount based on actual duration (e.g., $22)
+  platformFee     Float // Platform cut (e.g., 20% of actual)
+  teacherEarn     Float? // Teacher gets (e.g., $17.60)
+  status          TransactionStatus @default(ESCROW)
+  createdAt       DateTime          @default(now())
+  releasedAt      DateTime? // When the money was released to the teacher
+}
+
+enum TransactionStatus {
+  ESCROW // Money is held, session pending
+  RELEASED // Teacher got paid
+  REFUNDED // Student got refund
 }
 
 enum SessionStatus {

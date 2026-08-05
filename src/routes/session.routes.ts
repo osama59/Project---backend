@@ -101,17 +101,39 @@ router.post("/book", authenticateToken, async (req: any, res) => {
         .json({ error: "You already have a session at this time" });
     }
 
-    const newSession = await prisma.session.create({
-      data: {
-        teacherId,
-        studentId,
-        startTime: new Date(data.startTime),
-        endTime: new Date(data.endTime),
-        status: "PENDING",
-      },
+    const result = await prisma.$transaction(async (tx) => {
+      const newSession = await tx.session.create({
+        data: {
+          teacherId,
+          studentId,
+          startTime: new Date(data.startTime),
+          endTime: new Date(data.endTime),
+          status: "PENDING",
+        },
+      });
+
+      const sessionDuration =
+        Math.abs(
+          newSession.endTime.getTime() - newSession.startTime.getTime(),
+        ) /
+        (1000 * 60);
+
+      const scheduledAmount = sessionDuration * (teacher.hourPrice / 60); // is this correct !?
+
+      const newTransaction = await tx.transaction.create({
+        data: {
+          sessionId: newSession.id,
+          studentId: studentId,
+          teacherId: teacherId,
+          scheduledAmount: scheduledAmount,
+          platformFee: 0.2, // This needs to be come from somewhere , I don't know where :) , but NOT hard coded like that
+        },
+      });
+
+      return { newSession, newTransaction };
     });
 
-    res.status(201).json(newSession);
+    res.status(201).json(result);
   } catch (error) {
     console.log(error);
     return res.status(400).json({ error: "Something went wrong :(" });
@@ -196,7 +218,7 @@ router.get("/teacher", authenticateToken, async (req: any, res) => {
   }
 });
 
-// PATCH  session/:id // this one the TEACHER uses it
+// PATCH  /session/:id // this one the TEACHER uses it
 router.patch("/:id", authenticateToken, async (req: any, res) => {
   try {
     const teacher = await prisma.teacher.findUnique({
@@ -228,12 +250,97 @@ router.patch("/:id", authenticateToken, async (req: any, res) => {
       return res.status(400).json({ error: "Invalid input" });
     }
 
-    const updatedSession = await prisma.session.update({
-      where: { id: id },
-      data: { status: data.status },
+    const student = await prisma.student.findUnique({
+      where: { id: existingSession.studentId },
     });
 
-    res.json(updatedSession);
+    if (!student) {
+      return res.status(404).json({ error: "user profile not found" });
+    }
+
+    const sessionTransaction = await prisma.transaction.findUnique({
+      where: { sessionId: id },
+    });
+    if (!sessionTransaction) {
+      return res.status(404).json({ error: "Transaction nopt found" });
+    }
+
+    const teacherUser = await prisma.user.findUnique({
+      where: { id: teacher.userId },
+    });
+    if (!teacherUser) {
+      return res.status(404).json({ error: "user profile not found" });
+    }
+
+    const studentUser = await prisma.user.findUnique({
+      where: { id: student.userId },
+    });
+    if (!studentUser) {
+      return res.status(404).json({ error: "user profile not found" });
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      const updatedSession = await tx.session.update({
+        where: { id: id },
+        data: { status: data.status },
+      });
+
+      //TRANSITION SECTION
+      if (data.status == "COMPLETED") {
+        const scheduledDuration =
+          Math.abs(
+            existingSession.endTime.getTime() -
+              existingSession.startTime.getTime(),
+          ) /
+          (1000 * 60);
+        const realEndTime = new Date(data.realEndTime);
+        const realStartTime = new Date(data.realStartTime);
+        const activeDuration =
+          (realEndTime.getTime() - realStartTime.getTime()) / (1000 * 60);
+
+        const percentage = Math.min(activeDuration / scheduledDuration, 1);
+        const actualAmount = sessionTransaction.scheduledAmount * percentage;
+        const platformFee = sessionTransaction.platformFee;
+        const updatedTransaction = await tx.transaction.update({
+          where: { sessionId: id },
+          data: {
+            actualAmount: actualAmount,
+            teacherEarn: actualAmount * (1 - platformFee),
+            status: "RELEASED",
+          },
+        });
+        const teacherEarn = updatedTransaction.teacherEarn ?? 0;
+        const teacherBalance = teacherUser?.balance;
+
+        await tx.user.update({
+          where: { id: teacher.userId },
+          data: { balance: teacherBalance + teacherEarn },
+        });
+        return { updatedTransaction, updatedSession };
+      }
+
+      // REFUND SECTION
+      else if (data.status == "CANCELLED") {
+        const updatedTransaction = await tx.transaction.update({
+          where: { sessionId: id },
+          data: {
+            status: "REFUNDED",
+          },
+        });
+
+        const studentBalance = studentUser?.balance;
+
+        await tx.user.update({
+          where: { id: student.userId },
+          data: {
+            balance: studentBalance + updatedTransaction.scheduledAmount,
+          },
+        });
+        return { updatedTransaction, updatedSession };
+      }
+    });
+
+    res.json(result);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to update session" });

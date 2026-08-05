@@ -120,7 +120,7 @@ router.get("/teachers/confirmed", authenticateToken, async (req: any, res) => {
     const total = await prisma.teacher.count({
       where: {
         user: {
-          status: "PENDING",
+          status: "CONFIRMED",
         },
       },
     });
@@ -137,6 +137,49 @@ router.get("/teachers/confirmed", authenticateToken, async (req: any, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Failed to fetch profile" });
+  }
+});
+
+// GET /admin/dashboard
+router.get("/dashboard", authenticateToken, async (req: any, res) => {
+  try {
+    const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+    if (!user || user.role != "ADMIN") {
+      // I was wanting to put like forbiddin access you piece of shit! but what if I accidently test it wrong :)
+      return res
+        .status(403)
+        .json({ error: "Sorry accessing this route is forbiden :)" });
+    }
+    // wtf is this one !?
+    const totalMoney = await prisma.transaction.aggregate({
+      where: { status: "RELEASED" },
+      _sum: { scheduledAmount: true, teacherEarn: true },
+    });
+    const totalPendingSessions = await prisma.session.count({
+      where: { status: "PENDING" },
+    });
+    const totalSessions = await prisma.session.count();
+    const totalActiveTeachers = await prisma.teacher.count({
+      where: { user: { status: "APPROVED" } },
+    });
+
+    const revenue = totalMoney._sum.scheduledAmount || 0;
+    const teacherEarnings = totalMoney._sum.teacherEarn || 0;
+    const platformFees = revenue * 0.2;
+
+    res.json({
+      totalRevenue: revenue,
+      totalPlatformFees: platformFees,
+      totalTeacherEarnings: teacherEarnings,
+      totalSessions: totalSessions,
+      pendingSessions: totalPendingSessions,
+      activeTeachers: totalActiveTeachers,
+    });
+
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Failed to get dashboard data" });
   }
 });
 
