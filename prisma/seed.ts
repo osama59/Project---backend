@@ -64,13 +64,13 @@ async function main() {
         password: hashedPw,
         firstName,
         lastName,
-        age: faker.number.int({ min: 22, max: 60 }),
+        birthDate: faker.date.birthdate(),
         origin: faker.location.country(),
         timeZone: "America/New_York",
         subjects: teacherSubjects,
         role: "TEACHER",
         profileImageUrl: faker.image.avatar(), // Fake avatar URL
-        status: "CONFIRMED",
+        status: "APPROVED",
         // Create the Teacher profile
         teacher: {
           create: {
@@ -154,7 +154,7 @@ async function main() {
         password: await bcrypt.hash("password123", 10),
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
-        age: faker.number.int({ min: 18, max: 40 }),
+        birthDate: faker.date.birthdate(),
         origin: faker.location.country(),
         timeZone: "America/New_York",
         subjects: studentSubjects,
@@ -222,7 +222,7 @@ async function main() {
       password: await bcrypt.hash(process.env.ADMIN_PWD!, 10),
       firstName: "Osama",
       lastName: "Reema",
-      age: 24,
+      birthDate: faker.date.birthdate(),
       origin: "Syria",
       timeZone: "America/New_York",
       role: "ADMIN",

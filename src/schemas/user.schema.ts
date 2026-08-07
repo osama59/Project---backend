@@ -5,11 +5,11 @@ export const UserBaseSchema = z.object({
   password: z.string().min(6),
   firstName: z.string(),
   lastName: z.string(),
-  age: z.number(),
+  birthDate: z.date(),
   origin: z.string(),
   profileImageUrl: z.url().optional(),
   timeZone: z.string(),
-  role: z.enum(["STUDENT", "TEACHER", "ADMIN"]).optional(),
+  role: z.enum(["STUDENT", "TEACHER"]).optional(),
   subjects: z.array(z.string()),
   languages: z.array(
     z.object({

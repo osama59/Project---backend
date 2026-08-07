@@ -10,7 +10,7 @@ export const StudentUpdateSchema = z.object({
   email: z.email(),
   firstName: z.string(),
   lastName: z.string(),
-  age: z.number(),
+  birthDate: z.date(),
   origin: z.string(),
   profileImageUrl: z.url().optional(),
   timeZone: z.string(),

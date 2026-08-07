@@ -14,11 +14,12 @@ datasource db {
 
 model User {
   id              String     @id @default(uuid())
+  googleId        String?    @unique
   email           String     @unique
   password        String
   firstName       String
   lastName        String
-  age             Int
+  birthDate       DateTime
   origin          String
   profileImageUrl String?
   timeZone        String
@@ -30,6 +31,7 @@ model User {
   subjects        String[]
   status          UserStatus @default(PENDING)
   balance         Float      @default(0.0)
+  verifyCode      Int        @default(0) // 6 random digits
 }
 
 model Student {

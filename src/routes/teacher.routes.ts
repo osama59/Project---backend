@@ -31,11 +31,12 @@ router.post("/register", async (req, res) => {
           password: hashedPw,
           firstName: data.firstName,
           lastName: data.lastName,
-          age: data.age,
+          birthDate: data.birthDate,
           origin: data.origin,
           timeZone: data.timeZone,
           subjects: data.subjects,
           role: data.role,
+          profileImageUrl: data.profileImageUrl,
         },
       });
       const teacher = await tx.teacher.create({
@@ -45,6 +46,7 @@ router.post("/register", async (req, res) => {
           introVideoUrl: data.introVideoUrl,
           introText: data.introText,
           hourPrice: data.hourPrice,
+          availabilities: data.availabilities,
         },
       });
 
@@ -325,7 +327,7 @@ router.patch("/profile", authenticateToken, async (req: any, res) => {
           email: data.email,
           firstName: data.firstName,
           lastName: data.lastName,
-          age: data.age,
+          birthDate: data.birthDate,
           origin: data.origin,
           timeZone: data.timeZone,
           subjects: data.subjects,

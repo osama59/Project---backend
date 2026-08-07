@@ -31,10 +31,11 @@ router.post("/register", async (req, res) => {
           password: hashedPw,
           firstName: data.firstName,
           lastName: data.lastName,
-          age: data.age,
+          birthDate: data.birthDate,
           origin: data.origin,
           timeZone: data.timeZone,
           subjects: data.subjects,
+          profileImageUrl: data.profileImageUrl,
         },
       });
 
@@ -150,7 +151,7 @@ router.patch("/profile", authenticateToken, async (req: any, res) => {
           email: data.email,
           firstName: data.firstName,
           lastName: data.lastName,
-          age: data.age,
+          birthDate: data.birthDate,
           origin: data.origin,
           timeZone: data.timeZone,
           subjects: data.subjects,
