@@ -5,7 +5,7 @@ export const UserBaseSchema = z.object({
   password: z.string().min(6),
   firstName: z.string(),
   lastName: z.string(),
-  birthDate: z.date(),
+  birthDate: z.iso.datetime({ message: "Invalid date format. Use ISO 8601." }),
   origin: z.string(),
   profileImageUrl: z.url().optional(),
   timeZone: z.string(),
@@ -18,7 +18,9 @@ export const UserBaseSchema = z.object({
       languageType: z.enum(["SPEAK", "TEACH", "LEARN"]),
     }),
   ),
-  status: z.enum(["PENDING", "CONFIRMED", "APPROVED", "REJECTED", "SUSBENDED"]),
+  status: z
+    .enum(["PENDING", "CONFIRMED", "APPROVED", "REJECTED", "SUSBENDED"])
+    .optional(),
 });
 
 export const LoginSchema = z.object({

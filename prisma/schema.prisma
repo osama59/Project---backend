@@ -32,6 +32,9 @@ model User {
   status          UserStatus @default(PENDING)
   balance         Float      @default(0.0)
   verifyCode      Int        @default(0) // 6 random digits
+
+  sentMessages   Message[] @relation(name: "sentMessages")
+  recivedMessages Message[] @relation(name: "recivedMessages")
 }
 
 model Student {
@@ -129,6 +132,16 @@ model Transaction {
   releasedAt      DateTime? // When the money was released to the teacher
 }
 
+model Message {
+  id        String   @id @default(uuid())
+  senderId  String
+  sender    User     @relation(name: "sentMessages", fields: [senderId], references: [id])
+  reciverId String
+  reciver   User     @relation(name: "recivedMessages", fields: [reciverId], references: [id])
+  text      String
+  createdAt DateTime @default(now())
+}
+
 enum TransactionStatus {
   ESCROW // Money is held, session pending
   RELEASED // Teacher got paid
@@ -155,11 +168,11 @@ enum LanguageType {
 }
 
 enum UserStatus {
-  PENDING //When user first sign up
-  CONFIRMED //Email confirmed 
-  APPROVED //teacher approved 
-  REJECTED //teacher rejected 
-  SUSBENDED // user susbended
+  PENDING //When user first sign up 🟡
+  CONFIRMED //Email confirmed 🟢
+  APPROVED //teacher approved 🟢
+  REJECTED //teacher rejected 🔴
+  SUSBENDED // user susbended 🔴
 }
 
 enum Days {

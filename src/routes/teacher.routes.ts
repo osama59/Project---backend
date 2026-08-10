@@ -5,8 +5,12 @@ import {
   TeacherRegisterSchema,
   TeacherUpdateSchema,
 } from "../schemas/teacher.schema";
-import jwt from "jsonwebtoken";
-import { authenticateToken, getData } from "./helper";
+import {
+  authenticateToken,
+  generateToken,
+  getData,
+  getSecureSixDigit,
+} from "./helper";
 import { LoginSchema } from "../schemas/user.schema";
 
 const router = Router();
@@ -23,6 +27,7 @@ router.post("/register", async (req, res) => {
     });
     if (exists) return res.status(400).json({ error: "Email already exists" });
 
+    const verifyCode = getSecureSixDigit();
     const hashedPw = await bcrypt.hash(data.password, 10);
     const result = await prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
@@ -37,6 +42,7 @@ router.post("/register", async (req, res) => {
           subjects: data.subjects,
           role: data.role,
           profileImageUrl: data.profileImageUrl,
+          verifyCode: verifyCode,
         },
       });
       const teacher = await tx.teacher.create({
@@ -70,8 +76,8 @@ router.post("/register", async (req, res) => {
           })),
         });
       }
-
-      return { user, teacher };
+      console.log(verifyCode);
+      return { user: { email: user.email }, teacher };
     });
 
     res.json(result);
@@ -98,16 +104,18 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
+    if (user.status != "APPROVED") {
+      return res.status(400).json({ error: "Wait until Approved!" });
+    }
+
+
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
-    const token = jwt.sign(
-      { id: user.id, role: user.role },
-      process.env.ACCESS_TOKEN_SECRET!,
-      { expiresIn: "7d" },
-    );
+    const token = generateToken(user);
 
     res.json({
       token,
@@ -125,7 +133,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// GET /teacher/teachers
+// GET /teacher/me
 router.get("/me", authenticateToken, async (req: any, res) => {
   try {
     const userId = req.user.id;

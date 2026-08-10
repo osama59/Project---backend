@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { Resend } from "resend";
 
 // This will be passed as middleware when accessing private content
 export function getData(schema: any, req: any) {
@@ -22,5 +23,35 @@ export function authenticateToken(req: any, res: any, next: any) {
 
     req.user = user;
     next();
+  });
+}
+
+export function getSecureSixDigit(): number {
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  return 100000 + ((array[0] ?? 0) % 900000);
+}
+
+export function generateToken(user: any) {
+  const token = jwt.sign(
+    { id: user.id, role: user.role },
+    process.env.ACCESS_TOKEN_SECRET!,
+    { expiresIn: "7d" },
+  );
+  return token;
+}
+
+export async function sendEmail(
+  sender: string,
+  reciever: string,
+  subject: string,
+  html_code: string,
+) {
+  const resend = new Resend(process.env.RESENED_API_KEY);
+  await resend.emails.send({
+    from: sender,
+    to: reciever,
+    subject: subject,
+    html: html_code,
   });
 }

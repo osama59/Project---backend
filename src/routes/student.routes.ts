@@ -6,8 +6,13 @@ import {
   StudentUpdateSchema,
 } from "../schemas/student.schema";
 import { LoginSchema } from "../schemas/user.schema";
-import jwt from "jsonwebtoken";
-import { authenticateToken, getData } from "./helper";
+import {
+  authenticateToken,
+  generateToken,
+  getData,
+  getSecureSixDigit,
+  sendEmail,
+} from "./helper";
 
 const router = Router();
 
@@ -23,6 +28,7 @@ router.post("/register", async (req, res) => {
     });
     if (exists) return res.status(400).json({ error: "Email already exists" });
 
+    const verifyCode = getSecureSixDigit();
     const hashedPw = await bcrypt.hash(data.password, 10);
     const result = await prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
@@ -36,6 +42,7 @@ router.post("/register", async (req, res) => {
           timeZone: data.timeZone,
           subjects: data.subjects,
           profileImageUrl: data.profileImageUrl,
+          verifyCode: verifyCode,
         },
       });
 
@@ -55,8 +62,15 @@ router.post("/register", async (req, res) => {
           languageType: lang.languageType,
         })),
       });
-
-      return { user, student };
+      console.log(verifyCode);
+      sendEmail(
+        "noreply@resend.dev",
+        "osamareema59@gmail.com",
+        "verify email code",
+        `<p>Your verification code is: <strong>${verifyCode}</strong></p>
+         <p>Enter this code in the app to activate your account.</p>`,
+      );
+      return { user: { email: user.email }, student };
     });
 
     res.json(result);
@@ -83,16 +97,16 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
+    if (user.status != "CONFIRMED") {
+      return res.status(400).json({ error: "Validate email first" });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
-    const token = jwt.sign(
-      { id: user.id, role: user.role },
-      process.env.ACCESS_TOKEN_SECRET!,
-      { expiresIn: "7d" },
-    );
+    const token = generateToken(user);
 
     res.json({
       token,

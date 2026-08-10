@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { email, z } from "zod";
 import { AvailabilitySlotSchema } from "./teacher.schema";
 
 export const GoogleRegisterSchema = z.object({
@@ -29,4 +29,9 @@ export const GoogleRegisterSchema = z.object({
   introText: z.string().optional(),
   hourPrice: z.number().positive().optional(),
   availability: z.array(AvailabilitySlotSchema).optional(),
+});
+
+export const verifyEmailSchema = z.object({
+  email: z.email(),
+  verifyCode: z.number(),
 });

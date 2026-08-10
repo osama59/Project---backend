@@ -1,17 +1,19 @@
 import { Router } from "express";
 import { prisma } from "../prisma";
-import { authenticateToken, getData } from "./helper";
+import { authenticateToken, generateToken, getData } from "./helper";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
-import { GoogleRegisterSchema } from "../schemas/google.schema";
+import {
+  GoogleRegisterSchema,
+  verifyEmailSchema,
+} from "../schemas/auth.schema";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const router = Router();
 
-// POST /google/auth
-router.post("/auth", async (req, res) => {
+// POST /auth/google
+router.post("/google", async (req, res) => {
   try {
     const idToken = req.body.idToken;
     if (!idToken) {
@@ -145,13 +147,57 @@ router.post("/auth", async (req, res) => {
   }
 });
 
-function generateToken(user: any) {
-  const token = jwt.sign(
-    { id: user.id, role: user.role },
-    process.env.ACCESS_TOKEN_SECRET!,
-    { expiresIn: "7d" },
-  );
-  return token;
-}
+// POST /auth/verify-email
+router.post("/verify-email", async (req, res) => {
+  try {
+    const data = getData(verifyEmailSchema, req);
+    if (!data) return res.status(400).json({ error: "Invalid input ....!" });
+
+    const user = await prisma.user.findUnique({ where: { email: data.email } });
+
+    if (!user) {
+      return res.status(400).json({ error: "Invalid email " });
+    }
+
+    if (user.status != "PENDING") {
+      return res.status(400).json({ error: "User already verifide email " });
+    }
+
+    const isMatch = user.verifyCode === data.verifyCode;
+    if (!isMatch) {
+      return res.status(400).json({ error: "Invalid code" });
+    }
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        status: "CONFIRMED",
+        verifyCode: 0,
+      },
+    });
+
+    res.json({ msg: "Email verifide!" });
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ error: "Something went wrong :(" });
+  }
+});
 
 export default router;
+
+/*
+
+const { data, error } = await resend.emails.send({
+    from: 'onboarding@resend.dev',
+    to: 'delivered@resend.dev',
+    subject: 'Hello World',
+    html: '<strong>it works!</strong>',
+  });
+
+  if (error) {
+    return res.status(400).json(error);
+  }
+
+  return res.status(200).json(data);
+
+*/
