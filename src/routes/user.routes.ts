@@ -9,7 +9,7 @@ const router = Router();
 
 // WHEN the user is logged in ( USER PREFERENCE )
 // POST /user/change-password
-router.patch("/password", authenticateToken, async (req: any, res) => {
+router.patch("/change-password", authenticateToken, async (req: any, res) => {
   try {
     const data = getData(ChangePwdSchema, req);
     if (!data) return res.status(400).json({ error: "Invalid input ....!" });
