@@ -8,7 +8,7 @@ import { WithDrawSchema } from "../schemas/user.schema";
 const router = Router();
 
 // WHEN the user is logged in ( USER PREFERENCE )
-// POST /user/change-password
+// PATCH /user/change-password
 router.patch("/change-password", authenticateToken, async (req: any, res) => {
   try {
     const data = getData(ChangePwdSchema, req);
@@ -85,7 +85,7 @@ router.post("/withdraw", authenticateToken, async (req: any, res) => {
       return res.status(400).json({ error: "NO!" });
     }
 
-    if (user.balance < data.amount) {
+    if (user.balance < data.amount || user.balance === 0) {
       return res
         .status(400)
         .json({ error: "you don't have that much money in your account !" });

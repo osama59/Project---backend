@@ -1,0 +1,1271 @@
+{
+  "info": {
+    "_postman_id": "9361598c-6b5b-417a-8f80-071e146dfaa8",
+    "name": "My Collection",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56567218",
+    "_collection_link": "https://go.postman.co/collection/56567218-9361598c-6b5b-417a-8f80-071e146dfaa8?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Student me",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjlhMzgxOWM2LWM2MzctNDY4ZS1hYjMwLWViMjYxMWNiNjNkNiIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzg0NDcwMDI2LCJleHAiOjE3ODUwNzQ4MjZ9.miZx0TdyP5ruHD74DhFdWDX0izLzKD07a8WegD0RGtg",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/student/me",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "student",
+            "me"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Teacher Teachers",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZlNzI1YzU0LWVmNmQtNDNjZC04YWMyLWQ0NDVjOTk3OTZkNCIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzg0NzAyMDQwLCJleHAiOjE3ODUzMDY4NDB9.AniKgnc9g-R-cbIN0YLYe-I1S4T84LcQ6dHUsOaSOmk",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/teacher/teachers?page=1&limit=5",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "teacher",
+            "teachers"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "5"
+            }
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Teacher availability",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/teacher/:id/availability?date=2026-07-20",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "teacher",
+            ":id",
+            "availability"
+          ],
+          "query": [
+            {
+              "key": "date",
+              "value": "2026-07-20"
+            }
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "01f3ddfd-c612-4b5a-bd3a-533150fc8e97"
+            }
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Teacher me",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQzYzA0NDQzLTczZDMtNGY5OC05MjdiLWJlYzdkNDlhN2FiOCIsInJvbGUiOiJURUFDSEVSIiwiaWF0IjoxNzg1ODU0MTU1LCJleHAiOjE3ODY0NTg5NTV9.gjoUhmzUV3JEqebpltaJbQNEhBZ8ny_L_Zl9-BqYB8M",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/teacher/me",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "teacher",
+            "me"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Session Teacher",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg2YzdjN2ZhLWU4YmItNDMxYS1hNjI0LTgwYzI1NWVlNzY1OCIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzg0NTQzNjQ3LCJleHAiOjE3ODUxNDg0NDd9.2MvcF1XTXGBX2a0Cs1BjIf5hxWvl-9tD9RxbSKzpZzw",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/session/teacher",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "session",
+            "teacher"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Session Student",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjlhMzgxOWM2LWM2MzctNDY4ZS1hYjMwLWViMjYxMWNiNjNkNiIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzg0NTUwMjc2LCJleHAiOjE3ODUxNTUwNzZ9.eZE6hR06MBJmofPjY8T_AZWBQc8E53b9slsmCHWRsng",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/session/student",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "session",
+            "student"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Teachers Confirmed",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRkYjE0MTYwLWE2NjctNDRlZS04ZmYxLTRmZGI5N2JmMjEzMCIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4NjEyNDE4NywiZXhwIjoxNzg2NzI4OTg3fQ.tdYZXvMHUj3v5UvroaLTRm7TsEEpbOGx9iBQMg2Ro0A",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/admin/teachers/confirmed?page=1&limit=10",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "admin",
+            "teachers",
+            "confirmed"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "10"
+            }
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Dashboard",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRkYjE0MTYwLWE2NjctNDRlZS04ZmYxLTRmZGI5N2JmMjEzMCIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4NjEyNDE4NywiZXhwIjoxNzg2NzI4OTg3fQ.tdYZXvMHUj3v5UvroaLTRm7TsEEpbOGx9iBQMg2Ro0A",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/admin/dashboard",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "admin",
+            "dashboard"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Reports",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc4ZDI0YTMyLWJjMDMtNDc5Yy1iZWYyLWQ4N2U0NTQxN2JjOSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4NjQzNzM1NSwiZXhwIjoxNzg3MDQyMTU1fQ.N_gd2QjjUdSJNBfDekcf68ynSX4D8l3f_ZZJxUcZ-k8",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/admin/reports?page=1&limit=10",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "admin",
+            "reports"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "10"
+            }
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Messages History",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImI3N2VlYjBkLWUyYjgtNGJjOS04MzM1LWY4NWU3YmE5MjllYyIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzg2MTI0NTg1LCJleHAiOjE3ODY3MjkzODV9.tflo-faWlPVeY5paQrLPwpKEcYaBnKo0uPGeGTebbac",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/messages/history?page=1&limit=10&secondUserId=dd072c52-0c53-43c6-9be2-5142c94dab81",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "messages",
+            "history"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "10"
+            },
+            {
+              "key": "secondUserId",
+              "value": "dd072c52-0c53-43c6-9be2-5142c94dab81"
+            }
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Session Status",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQzYzA0NDQzLTczZDMtNGY5OC05MjdiLWJlYzdkNDlhN2FiOCIsInJvbGUiOiJURUFDSEVSIiwiaWF0IjoxNzg1ODU0MTU1LCJleHAiOjE3ODY0NTg5NTV9.gjoUhmzUV3JEqebpltaJbQNEhBZ8ny_L_Zl9-BqYB8M",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"status\": \"COMPLETED\",\r\n  \"realStartTime\": \"2026-08-03T14:00:00.000Z\",\r\n  \"realEndTime\": \"2026-08-03T14:25:00.000Z\"\r\n}\r\n\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/session/:id",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "session",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "c5edb7c1-bb98-490a-8c27-a4eead67f6fd"
+            }
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Admin User Update Status",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc4ZDI0YTMyLWJjMDMtNDc5Yy1iZWYyLWQ4N2U0NTQxN2JjOSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4NjQzNzM1NSwiZXhwIjoxNzg3MDQyMTU1fQ.N_gd2QjjUdSJNBfDekcf68ynSX4D8l3f_ZZJxUcZ-k8",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"status\": \"SUSBENDED\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/user/:id/status",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "admin",
+            "user",
+            ":id",
+            "status"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "5598be5f-3cc2-41d6-a796-12c00dd69d4d"
+            }
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Report Update",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc4ZDI0YTMyLWJjMDMtNDc5Yy1iZWYyLWQ4N2U0NTQxN2JjOSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4NjQzNzM1NSwiZXhwIjoxNzg3MDQyMTU1fQ.N_gd2QjjUdSJNBfDekcf68ynSX4D8l3f_ZZJxUcZ-k8",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"status\": \"ACTION_TAKEN\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/report/:id",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "admin",
+            "report",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "c9d7fd41-8e4b-426b-88ed-2b362335bc0c"
+            }
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Studen Update Profile",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImEwMzc0N2IzLWU1NmQtNDMwNy04MTkzLTYzNDRlYTMxNDlkMSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzg1NzY0Njg1LCJleHAiOjE3ODYzNjk0ODV9.HBCz7BiqanqCoT0A4a_OnsNZS1zNWNDvzDRvhovbhWw",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"osamatest59@example.com\",\r\n  \"firstName\": \"Osama\",\r\n  \"lastName\": \"Test\",\r\n  \"age\": 25,\r\n  \"origin\": \"Syria\",\r\n  \"timeZone\": \"Asia/Damascus\",\r\n  \"subjects\": [\"Math\", \"Science\"],\r\n  \"preferedPriceMin\": 15,\r\n  \"preferedPriceMax\": 50,\r\n  \"languages\": [\r\n    { \"name\": \"English\", \"level\": 5, \"languageType\": \"SPEAK\" },\r\n    { \"name\": \"French\", \"level\": 3, \"languageType\": \"LEARN\" }\r\n  ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/student/profile",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "student",
+            "profile"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Teacher Update Profile",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZmZDIyZDViLWQ5MmItNDM1Ny1hNDMzLTU4NjI2NjhkMThlNyIsInJvbGUiOiJURUFDSEVSIiwiaWF0IjoxNzg1NzY5NDc5LCJleHAiOjE3ODYzNzQyNzl9.15_lTm_7-lV81pPZxWMIvgqn-_R3DwFJPSsVbJXISsE",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"teacher5555@test.com\",\r\n  \"firstName\": \"Jane\",\r\n  \"lastName\": \"Smith\",\r\n  \"age\": 28,\r\n  \"origin\": \"USA\",\r\n  \"timeZone\": \"America/New_York\",\r\n  \"subjects\": [\"Math\", \"Physics\"],\r\n  \"introVideoUrl\": \"https://example.com/new-video.mp4\",\r\n  \"introText\": \"I love teaching math and physics!\",\r\n  \"hourPrice\": 35.00,\r\n  \"languages\": [\r\n    { \"name\": \"English\", \"level\": 5, \"languageType\": \"TEACH\" },\r\n    { \"name\": \"Spanish\", \"level\": 4, \"languageType\": \"TEACH\" }\r\n  ],\r\n  \"availability\": [\r\n    {\r\n      \"day\": \"FRIDAY\",\r\n      \"fromTime\": \"09:00\",\r\n      \"toTime\": \"12:00\"\r\n    },\r\n    {\r\n      \"day\": \"WEDNESDAY\",\r\n      \"fromTime\": \"14:00\",\r\n      \"toTime\": \"17:00\"\r\n    }\r\n  ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/teacher/profile",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "teacher",
+            "profile"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "User Change Password",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer ",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"oldPassword\":\"\",\r\n    \"newPassword\":\"\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/user/change-password",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "user",
+            "change-password"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Student Register",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\": \"osamatest1234@example.com\",\n    \"password\": \"secure123\",\n    \"firstName\": \"Osama\",\n    \"lastName\": \"ComeOn!\",\n    \"birthDate\": \"2006-08-03T15:00:00.000Z\",\n    \"origin\": \"USA\",\n    \"timeZone\": \"America/New_York\",\n    \"preferedPriceMin\": 20,\n    \"preferedPriceMax\": 100,\n    \"status\": \"CONFIRMED\",\n    \"subjects\": [\n        \"Arabic\",\n        \"Music\"\n    ],\n    \"languages\": [\n        {\n            \"name\": \"English\",\n            \"level\": 5,\n            \"languageType\": \"SPEAK\"\n        },\n        {\n            \"name\": \"Arabic\",\n            \"level\": 3,\n            \"languageType\": \"LEARN\"\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/student/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "student",
+            "register"
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "Student Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"osamatest1234@example.com\",\n  \"password\": \"secure123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/student/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "student",
+            "login"
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "Teacher Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"teacher6@test.com\",\n  \"password\": \"secure123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/teacher/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "teacher",
+            "login"
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "Teacher Register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"teacher6@test.com\",\r\n  \"password\": \"secure123\",\r\n  \"firstName\": \"Jane\",\r\n  \"lastName\": \"Smith\",\r\n    \"birthDate\": \"2006-08-03T15:00:00.000Z\",\r\n  \"origin\": \"USA\",\r\n  \"timeZone\": \"America/New_York\",\r\n  \"subjects\": [\"Math\", \"Physics\"],\r\n  \"role\":\"TEACHER\",\r\n    \"status\": \"APPROVED\",\r\n  \"languages\": [\r\n    {\r\n      \"name\": \"Korean\",\r\n      \"level\": 5,\r\n      \"languageType\": \"TEACH\"\r\n    }\r\n  ],\r\n  \"certificateImageUrl\": \"https://example.com/cert.jpg\",\r\n  \"introVideoUrl\": \"https://example.com/video.mp4\",\r\n  \"introText\": \"I love teaching kOREAN!\",\r\n  \"hourPrice\": 30.50,\r\n  \"availability\": [\r\n    {\r\n      \"day\": \"MONDAY\",\r\n      \"fromTime\": \"09:00\",\r\n      \"toTime\": \"12:00\"\r\n    },\r\n    {\r\n      \"day\": \"WEDNESDAY\",\r\n      \"fromTime\": \"14:00\",\r\n      \"toTime\": \"17:00\"\r\n    }\r\n  ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/teacher/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "teacher",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Session Book",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImEwMzc0N2IzLWU1NmQtNDMwNy04MTkzLTYzNDRlYTMxNDlkMSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzg1ODUyMzc3LCJleHAiOjE3ODY0NTcxNzd9.Hvj6VsOn9PZqIno1Zga3k4_4D5VRMRT70htyez5JKmI",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"teacherId\": \"a670d147-6bdb-4a85-a84e-f5707ecc1f90\",\r\n  \"startTime\": \"2026-08-03T15:00:00.000Z\",\r\n  \"endTime\": \"2026-08-03T15:30:00.000Z\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/session/book",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "session",
+            "book"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Session student Rate Teacher",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjlhMzgxOWM2LWM2MzctNDY4ZS1hYjMwLWViMjYxMWNiNjNkNiIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzg0NTUwMjc2LCJleHAiOjE3ODUxNTUwNzZ9.eZE6hR06MBJmofPjY8T_AZWBQc8E53b9slsmCHWRsng",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\"rating\": 5, \"review\": \"Amazing teacher!\" \r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/session/:id/rate",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "session",
+            ":id",
+            "rate"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "7d5881dd-f856-4a42-b76f-2339660d0ea4"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjlhMzgxOWM2LWM2MzctNDY4ZS1hYjMwLWViMjYxMWNiNjNkNiIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzg0NTUwMjc2LCJleHAiOjE3ODUxNTUwNzZ9.eZE6hR06MBJmofPjY8T_AZWBQc8E53b9slsmCHWRsng",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"SecretAdmin123@gmail.com\",\r\n  \"password\": \"12GEY7edh87123qe#HSU9d7uhjsd\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "admin",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Auth Verify Email",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"email\": \"teacher6@test.com\", \"verifyCode\": 500019 }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/auth/verify-email",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "auth",
+            "verify-email"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Messages New",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImI3N2VlYjBkLWUyYjgtNGJjOS04MzM1LWY4NWU3YmE5MjllYyIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzg2MTI0NTg1LCJleHAiOjE3ODY3MjkzODV9.tflo-faWlPVeY5paQrLPwpKEcYaBnKo0uPGeGTebbac",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"reciverId\": \"dd072c52-0c53-43c6-9be2-5142c94dab81\",\r\n  \"text\": \"Testing history , wop wop wop \"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/messages/new",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "messages",
+            "new"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Report",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImI3N2VlYjBkLWUyYjgtNGJjOS04MzM1LWY4NWU3YmE5MjllYyIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzg2NDM2NTAwLCJleHAiOjE3ODcwNDEzMDB9.Jdg_Bfy27ICDkfp2Sjv3K6pgutvaJcxD7J9MYItGhoU",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"reportedId\": \"5598be5f-3cc2-41d6-a796-12c00dd69d4d\",\r\n  \"category\": [\"inappropriate_content\"],\r\n  \"description\": \"Profile picture contains offensive imagery.\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/report/",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "report",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "User Reset Password",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"your@email.com\",\r\n  \"verifyCode\": 123456,\r\n  \"newPassword\": \"brandnew456\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/user/reset-password",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "user",
+            "reset-password"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "User Withdraw",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer ",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"amount\": 0\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/user/withdraw",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "user",
+            "withdraw"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "supabase_service_role_api_key_06a2",
+      "secret": true
+    },
+    {
+      "key": "bearer_token_0lk7",
+      "secret": true
+    },
+    {
+      "key": "supabase_service_role_api_key_0mis",
+      "secret": true
+    },
+    {
+      "key": "bearer_token_08pv",
+      "secret": true
+    }
+  ]
+}
