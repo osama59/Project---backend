@@ -4,11 +4,14 @@
   "type": "module",
   "private": true,
   "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^11.16.0",
     "@types/bun": "latest",
     "@types/express": "^5.0.6",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
-    "prisma": "^7.8.0"
+    "prisma": "^7.8.0",
+    "prisma-erd-generator": "^2.4.4",
+    "puppeteer": "^25.5.0"
   },
   "peerDependencies": {
     "typescript": "^6.0.3"

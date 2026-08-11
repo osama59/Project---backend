@@ -27,3 +27,7 @@ export const LoginSchema = z.object({
   email: z.email(),
   password: z.string().min(6, "Password required"),
 });
+
+export const WithDrawSchema = z.object({
+  amount: z.number().nonnegative(),
+});

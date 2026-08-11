@@ -12,6 +12,12 @@ datasource db {
   provider = "postgresql"
 }
 
+generator erd {
+  provider    = "prisma-erd-generator"
+  output      = "./ERD.svg"
+  ignoreEnums = true
+}
+
 model User {
   id              String     @id @default(uuid())
   googleId        String?    @unique
@@ -33,8 +39,13 @@ model User {
   balance         Float      @default(0.0)
   verifyCode      Int        @default(0) // 6 random digits
 
-  sentMessages   Message[] @relation(name: "sentMessages")
+  sentMessages    Message[] @relation(name: "sentMessages")
   recivedMessages Message[] @relation(name: "recivedMessages")
+
+  reporterReports Report[] @relation(name: "reporterReports")
+
+  reportedReports Report[] @relation(name: "reportedReports")
+  receipt         Receipt?
 }
 
 model Student {
@@ -132,6 +143,15 @@ model Transaction {
   releasedAt      DateTime? // When the money was released to the teacher
 }
 
+model Receipt {
+  id        String        @id @default(uuid())
+  userId    String        @unique
+  user      User          @relation(fields: [userId], references: [id])
+  amount    Int
+  status    ReceiptStatus @default(PROCESSED) // just for dev :)
+  createdAt DateTime      @default(now())
+}
+
 model Message {
   id        String   @id @default(uuid())
   senderId  String
@@ -140,6 +160,37 @@ model Message {
   reciver   User     @relation(name: "recivedMessages", fields: [reciverId], references: [id])
   text      String
   createdAt DateTime @default(now())
+
+  reports Report[]
+}
+
+model Report {
+  id           String       @id @default(uuid())
+  reporterId   String
+  reporter     User         @relation(name: "reporterReports", fields: [reporterId], references: [id])
+  reportedId   String
+  reported     User         @relation(name: "reportedReports", fields: [reportedId], references: [id])
+  category     String[]
+  description  String?
+  status       ReportStatus @default(PENDING)
+  messageId    String?
+  message      Message?     @relation(fields: [messageId], references: [id])
+  createdAt    DateTime     @default(now())
+  resolvedAt   DateTime?
+  resolvedById String? // why we didn't use a relation here ??
+  // resolvedBy User? @relation(name:"resol") // maby it's a bad idea to store admin data with the user :)
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWD
+  DISMISSED
+  ACTION_TAKEN
+}
+
+enum ReceiptStatus {
+  PENDING
+  PROCESSED
 }
 
 enum TransactionStatus {

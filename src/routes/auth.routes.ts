@@ -147,6 +147,8 @@ router.post("/google", async (req, res) => {
   }
 });
 
+// This can be used to Resend CODE !
+// this can be used to reset PASSWORD !
 // POST /auth/verify-email
 router.post("/verify-email", async (req, res) => {
   try {
@@ -183,21 +185,5 @@ router.post("/verify-email", async (req, res) => {
   }
 });
 
+
 export default router;
-
-/*
-
-const { data, error } = await resend.emails.send({
-    from: 'onboarding@resend.dev',
-    to: 'delivered@resend.dev',
-    subject: 'Hello World',
-    html: '<strong>it works!</strong>',
-  });
-
-  if (error) {
-    return res.status(400).json(error);
-  }
-
-  return res.status(200).json(data);
-
-*/

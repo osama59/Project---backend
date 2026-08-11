@@ -10,6 +10,7 @@ import {
   generateToken,
   getData,
   getSecureSixDigit,
+  sendEmail,
 } from "./helper";
 import { LoginSchema } from "../schemas/user.schema";
 
@@ -77,6 +78,14 @@ router.post("/register", async (req, res) => {
         });
       }
       console.log(verifyCode);
+      sendEmail(
+        "noreply@resend.dev",
+        "osamareema59@gmail.com",
+        "verify email code",
+        `<p>Your verification code is: <strong>${verifyCode}</strong></p>
+               <p>Enter this code in the app to activate your account.</p>`,
+      );
+
       return { user: { email: user.email }, teacher };
     });
 
@@ -108,8 +117,6 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Wait until Approved!" });
     }
 
-
-
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ error: "Invalid email or password" });
@@ -124,6 +131,7 @@ router.post("/login", async (req, res) => {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
+        status: user.status,
       },
       teacher: user.teacher,
     });

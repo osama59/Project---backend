@@ -35,3 +35,13 @@ export const verifyEmailSchema = z.object({
   email: z.email(),
   verifyCode: z.number(),
 });
+export const ResetPwdSchema = z.object({
+  email: z.email(),
+  verifyCode: z.number(),
+  newPassword: z.string(),
+});
+
+export const ChangePwdSchema = z.object({
+  oldPassword: z.string(),
+  newPassword: z.string(),
+});
