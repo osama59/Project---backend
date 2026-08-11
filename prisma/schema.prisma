@@ -12,12 +12,6 @@ datasource db {
   provider = "postgresql"
 }
 
-generator erd {
-  provider    = "prisma-erd-generator"
-  output      = "./ERD.svg"
-  ignoreEnums = true
-}
-
 model User {
   id              String     @id @default(uuid())
   googleId        String?    @unique

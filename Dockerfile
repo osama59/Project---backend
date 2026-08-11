@@ -10,6 +10,10 @@ COPY package.json ./
 # Install dependencies (this runs 'bun install')
 RUN bun install
 
+# Copy Prisma schema and generate the client
+COPY prisma ./prisma
+RUN bunx prisma generate
+
 # Copy the rest of your application source code
 COPY . .
 
