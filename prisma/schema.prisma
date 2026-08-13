@@ -39,7 +39,8 @@ model User {
   reporterReports Report[] @relation(name: "reporterReports")
 
   reportedReports Report[] @relation(name: "reportedReports")
-  receipt         Receipt?
+
+  receipts Receipt[]
 }
 
 model Student {
@@ -139,7 +140,7 @@ model Transaction {
 
 model Receipt {
   id        String        @id @default(uuid())
-  userId    String        @unique
+  userId    String
   user      User          @relation(fields: [userId], references: [id])
   amount    Int
   status    ReceiptStatus @default(PROCESSED) // just for dev :)

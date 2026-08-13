@@ -35,6 +35,11 @@ export const verifyEmailSchema = z.object({
   email: z.email(),
   verifyCode: z.number(),
 });
+
+export const ResendVerificationSchema = z.object({
+  email: z.email(),
+});
+
 export const ResetPwdSchema = z.object({
   email: z.email(),
   verifyCode: z.number(),

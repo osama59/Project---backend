@@ -1,10 +1,17 @@
 import { Router } from "express";
 import { prisma } from "../prisma";
-import { authenticateToken, generateToken, getData } from "./helper";
+import {
+  authenticateToken,
+  generateToken,
+  getData,
+  getSecureSixDigit,
+  sendEmail,
+} from "./helper";
 import bcrypt from "bcryptjs";
 import { OAuth2Client } from "google-auth-library";
 import {
   GoogleRegisterSchema,
+  ResendVerificationSchema,
   verifyEmailSchema,
 } from "../schemas/auth.schema";
 
@@ -147,8 +154,6 @@ router.post("/google", async (req, res) => {
   }
 });
 
-// This can be used to Resend CODE !
-// this can be used to reset PASSWORD !
 // POST /auth/verify-email
 router.post("/verify-email", async (req, res) => {
   try {
@@ -185,5 +190,41 @@ router.post("/verify-email", async (req, res) => {
   }
 });
 
+// Forget password ?
+// POST /auth/resend-verification
+router.post("/resend-verification", async (req, res) => {
+  try {
+    const data = getData(ResendVerificationSchema, req);
+    if (!data) return res.status(400).json({ error: "Invalid input ....!" });
+
+    const user = await prisma.user.findUnique({ where: { email: data.email } });
+
+    if (!user) {
+      return res.status(400).json({ error: "Invalid email " });
+    }
+
+    const verifyCode = getSecureSixDigit();
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        verifyCode: verifyCode,
+      },
+    });
+    console.log(verifyCode);
+    sendEmail(
+      "noreply@resend.dev",
+      "osamareema59@gmail.com",
+      "verify email code",
+      `<p>Your verification code is: <strong>${verifyCode}</strong></p>
+         <p>Enter this code in the app to activate your account.</p>`,
+    );
+
+    res.json({ msg: "Email verifide!" });
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ error: "Something went wrong :(" });
+  }
+});
 
 export default router;

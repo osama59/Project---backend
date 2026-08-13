@@ -173,7 +173,7 @@
         "header": [
           {
             "key": "Authorization",
-            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQzYzA0NDQzLTczZDMtNGY5OC05MjdiLWJlYzdkNDlhN2FiOCIsInJvbGUiOiJURUFDSEVSIiwiaWF0IjoxNzg1ODU0MTU1LCJleHAiOjE3ODY0NTg5NTV9.gjoUhmzUV3JEqebpltaJbQNEhBZ8ny_L_Zl9-BqYB8M",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU1OThiZTVmLTNjYzItNDFkNi1hNzk2LTEyYzAwZGQ2OWQ0ZCIsInJvbGUiOiJURUFDSEVSIiwiaWF0IjoxNzg2NTIwOTA2LCJleHAiOjE3ODcxMjU3MDZ9.NUTK5Np9kFlzmI3iZcaWcv47iZJE9HMioGX1dUJ-MhY",
             "type": "text"
           }
         ],
@@ -778,7 +778,7 @@
         "header": [
           {
             "key": "Authorization",
-            "value": "Bearer ",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk5NDMwOGE2LTg0NjItNDBiZi1iZjc2LTI0MjZjM2VkMmI4NiIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzg2NDkwNzg4LCJleHAiOjE3ODcwOTU1ODh9.qqF-L-GryQy6S-V-Me6fTFrpg-chAewUXd41qlbp5-Q",
             "type": "text"
           }
         ],
@@ -1116,6 +1116,35 @@
       "response": []
     },
     {
+      "name": "Auth Resend Verification",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"email\": \"teacher6@test.com\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/auth/resend-verification",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "auth",
+            "resend-verification"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Messages New",
       "request": {
         "method": "POST",
@@ -1221,7 +1250,7 @@
         "header": [
           {
             "key": "Authorization",
-            "value": "Bearer ",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU1OThiZTVmLTNjYzItNDFkNi1hNzk2LTEyYzAwZGQ2OWQ0ZCIsInJvbGUiOiJURUFDSEVSIiwiaWF0IjoxNzg2NTIxNzY3LCJleHAiOjE3ODcxMjY1Njd9.Eb4gnatZE77E6dyP60qDhcE0nIHVkbGq9V2t1nsXDS4",
             "type": "text"
           }
         ],
