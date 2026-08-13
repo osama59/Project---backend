@@ -96,51 +96,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// POST /teacher/login
-router.post("/login", async (req, res) => {
-  const data = getData(LoginSchema, req);
-  if (!data) return res.status(400).json({ error: "Invalid input" });
-
-  const { email, password } = data;
-
-  try {
-    const user = await prisma.user.findUnique({
-      where: { email },
-      include: { teacher: true },
-    });
-
-    if (!user || !user.teacher) {
-      return res.status(400).json({ error: "Invalid email or password" });
-    }
-
-    if (user.status != "APPROVED") {
-      return res.status(400).json({ error: "Wait until Approved!" });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ error: "Invalid email or password" });
-    }
-
-    const token = generateToken(user);
-
-    res.json({
-      token,
-      user: {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        status: user.status,
-      },
-      teacher: user.teacher,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Login failed" });
-  }
-});
-
 // GET /teacher/me
 router.get("/me", authenticateToken, async (req: any, res) => {
   try {

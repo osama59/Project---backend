@@ -56,47 +56,6 @@ router.patch("/user/:id/status", authenticateToken, async (req: any, res) => {
   }
 });
 
-// POST /admin/login
-router.post("/login", async (req, res) => {
-  const data = getData(LoginSchema, req);
-  if (!data) return res.status(400).json({ error: "Invalid input" });
-
-  const { email, password } = data;
-
-  try {
-    const user = await prisma.user.findUnique({
-      where: { email, role: "ADMIN" },
-    });
-
-    if (!user) {
-      return res.status(400).json({ error: "Invalid email or password" });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ error: "Invalid email or password" });
-    }
-
-    const token = jwt.sign(
-      { id: user.id, role: user.role },
-      process.env.ACCESS_TOKEN_SECRET!,
-      { expiresIn: "7d" },
-    );
-
-    res.json({
-      token,
-      user: {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      },
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Login failed" });
-  }
-});
 
 // GET /admin/teacher/confirmed?page=1&limit=10
 router.get("/teachers/confirmed", authenticateToken, async (req: any, res) => {

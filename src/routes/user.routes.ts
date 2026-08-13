@@ -3,7 +3,8 @@ import { prisma } from "../prisma";
 import { authenticateToken, generateToken, getData } from "./helper";
 import bcrypt from "bcryptjs";
 import { ChangePwdSchema, ResetPwdSchema } from "../schemas/auth.schema";
-import { WithDrawSchema } from "../schemas/user.schema";
+import { LoginSchema, WithDrawSchema } from "../schemas/user.schema";
+import { use } from "react";
 
 const router = Router();
 
@@ -121,5 +122,52 @@ router.post("/withdraw", authenticateToken, async (req: any, res) => {
   }
 });
 
-//
+// POST /user/login
+router.post("/login", async (req, res) => {
+  try {
+    const data = getData(LoginSchema, req);
+    if (!data) return res.status(400).json({ error: "Invalid input" });
+
+    const { email, password } = data;
+
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: "Invalid email or password" });
+    }
+    if (user.role === "STUDENT") {
+      if (user.status != "CONFIRMED") {
+        return res.status(400).json({ error: "Validate email first" });
+      }
+    } else if (user.role === "TEACHER") {
+      if (user.status != "APPROVED") {
+        return res.status(400).json({ error: "Wait until Approved!" });
+      }
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: "Invalid email or password" });
+    }
+
+    const token = generateToken(user);
+
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Login failed" });
+  }
+});
+
 export default router;
