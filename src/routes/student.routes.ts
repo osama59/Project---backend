@@ -13,6 +13,7 @@ import {
   getSecureSixDigit,
   sendEmail,
 } from "./helper";
+import { verificationEmailHtml } from "../email/emailTemplates";
 
 const router = Router();
 
@@ -63,13 +64,23 @@ router.post("/register", async (req, res) => {
         })),
       });
       console.log(verifyCode);
-      sendEmail(
+      const assetBaseUrl = process.env.ASSET_BASE_URL!;
+      // ------TEMP Double email test section------
+      await sendEmail(
         "noreply@resend.dev",
+        //user.email,
         "osamareema59@gmail.com",
-        "verify email code",
-        `<p>Your verification code is: <strong>${verifyCode}</strong></p>
-         <p>Enter this code in the app to activate your account.</p>`,
+        "رمز التحقق الخاص بك في Fluenzy",
+        verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
       );
+      
+      await sendEmail(
+        "noreply@resend.dev",
+        "aliazaldeeeen@gmail.com",
+        "رمز التحقق الخاص بك في Fluenzy",
+        verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
+      );
+
       return { user: { email: user.email }, student };
     });
 
@@ -79,7 +90,6 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ error: "Registration failed" });
   }
 });
-
 
 // GET /student/me
 router.get("/me", authenticateToken, async (req: any, res) => {

@@ -14,6 +14,7 @@ import {
   ResendVerificationSchema,
   verifyEmailSchema,
 } from "../schemas/auth.schema";
+import { verificationEmailHtml } from "../email/emailTemplates";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -211,16 +212,27 @@ router.post("/resend-verification", async (req, res) => {
         verifyCode: verifyCode,
       },
     });
+    const assetBaseUrl = process.env.ASSET_BASE_URL!;
+
     console.log(verifyCode);
-    sendEmail(
+    // ------TEMP Double email test section------
+
+    await sendEmail(
       "noreply@resend.dev",
+      // user.email,
       "osamareema59@gmail.com",
-      "verify email code",
-      `<p>Your verification code is: <strong>${verifyCode}</strong></p>
-         <p>Enter this code in the app to activate your account.</p>`,
+      "رمز التحقق الخاص بك في Fluenzy",
+      verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
     );
 
-    res.json({ msg: "Email verifide!" });
+    await sendEmail(
+      "noreply@resend.dev",
+      "aliazaldeeeen@gmail.com",
+      "رمز التحقق الخاص بك في Fluenzy",
+      verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
+    );
+
+    res.json({ msg: "Code was re-sent!" });
   } catch (error) {
     console.error(error);
     res.status(401).json({ error: "Something went wrong :(" });

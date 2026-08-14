@@ -1,0 +1,25 @@
+<!-- Replace {{CODE}} with the numeric verification code before sending. -->
+<!-- Replace {{ASSET_BASE_URL}} with the public HTTPS directory that contains assets/. -->
+<!-- Production implementation is in emailTemplates.ts. -->
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <body style="margin:0;padding:0;background:#edf7ff;font-family:Arial,Helvetica,sans-serif;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:linear-gradient(145deg,#f7faff,#f8efff 52%,#e6f5ff);">
+      <tr><td align="center" style="padding:38px 16px;">
+        <table role="presentation" width="440" cellspacing="0" cellpadding="0" border="0" style="width:440px;max-width:440px;">
+          <tr><td align="center" style="padding:0 0 24px;"><div style="font:italic 700 58px Georgia,serif;color:#8a59df;line-height:48px;letter-spacing:-12px;padding-left:12px;">F</div><div style="font:500 32px Arial,sans-serif;color:#5f43c9;direction:ltr;">fluenzy</div><div style="font-size:8px;color:#6d637d;direction:ltr;">Speak. Connect. Fluently.</div></td></tr>
+          <tr><td style="background:#fff;border:1px solid #d4d3d9;border-radius:30px;box-shadow:0 12px 20px rgba(63,49,78,.19);padding:34px 30px 28px;text-align:center;">
+            <img src="{{ASSET_BASE_URL}}/verification-illustration.png" width="176" alt="تأكيد البريد الإلكتروني" style="display:block;margin:0 auto 22px;border:0;" />
+            <div style="font-size:27px;line-height:38px;color:#8d62de;font-weight:700;">مرحباً بك في <span dir="ltr">Fluenzy</span> 👋</div>
+            <div style="margin-top:18px;font-size:17px;line-height:29px;color:#76717a;">شكراً لتسجيلك في تطبيقنا، يرجى استخدام رمز التحقق أدناه لتأكيد بريدك الإلكتروني</div>
+            <div style="margin-top:23px;font-size:19px;line-height:28px;color:#8d62de;">رمز التحقق الخاص بك</div>
+            <div dir="ltr" style="margin:16px auto 30px;font-size:24px;line-height:54px;font-weight:700;color:#5732bd;letter-spacing:14px;">{{CODE}}</div>
+            <div style="height:1px;background:#dfdde1;"></div>
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:22px;"><tr><td style="text-align:right;color:#56545a;"><div style="font-size:17px;font-weight:700;line-height:27px;">لم تطلب هذا الرمز؟</div><div style="font-size:15px;line-height:24px;color:#76717a;">إذا لم تقم بإنشاء حساب في Fluenzy،<br />يمكنك تجاهل هذا البريد الإلكتروني بأمان</div></td><td width="78" align="center"><div style="width:58px;height:58px;line-height:58px;border-radius:50%;background:#319954;border:5px solid #eaf4ed;color:#fff;font-size:40px;font-weight:700;">✓</div></td></tr></table>
+          </td></tr>
+          <tr><td style="padding:26px 24px 0;text-align:center;color:#66616f;font-size:16px;line-height:25px;">إذا واجهت أي مشكلة،<br />تواصل معنا على <a href="mailto:support@fluenzy.com" style="color:#9d79df;text-decoration:none;direction:ltr;">support@fluenzy.com</a><br /><span style="font-size:14px;color:#696374;">جميع الحقوق محفوظة لـ fluenzy 2026</span></td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </body>
+</html>

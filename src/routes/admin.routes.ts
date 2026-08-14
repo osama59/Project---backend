@@ -5,6 +5,7 @@ import { LoginSchema } from "../schemas/user.schema";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { AdminUpdateReport, AdminUpdateStatus } from "../schemas/admin.schema";
+import { teacherApprovalEmailHtml } from "../email/emailTemplates";
 
 const router = Router();
 
@@ -16,7 +17,7 @@ router.patch("/user/:id/status", authenticateToken, async (req: any, res) => {
     });
 
     if (!admin || admin.role !== "ADMIN") {
-      return res.status(404).json({ error: "user not found" });
+      return res.status(404).json({ error: "you are not the admin:)" });
     }
 
     const { id } = req.params;
@@ -35,12 +36,23 @@ router.patch("/user/:id/status", authenticateToken, async (req: any, res) => {
     }
 
     if (data.status === "APPROVED" && user.role === "TEACHER") {
-      sendEmail(
+      const assetBaseUrl = process.env.ASSET_BASE_URL!;
+
+      // ------TEMP Double email test section------
+
+      await sendEmail(
         "noreply@resend.dev",
+        // user.email,
         "osamareema59@gmail.com",
-        "You are acceepted! in fluenzy platform.",
-        `<p>thank you so much for registiring in our platform ! </p>
-        <p>you can now sign up in your account !</p>`,
+        "تم قبول طلبك في Fluenzy!",
+        teacherApprovalEmailHtml({ firstName: user.firstName, assetBaseUrl }),
+      );
+      
+      await sendEmail(
+        "noreply@resend.dev",
+        "aliazaldeeeen@gmail.com",
+        "تم قبول طلبك في Fluenzy!",
+        teacherApprovalEmailHtml({ firstName: user.firstName, assetBaseUrl }),
       );
     }
 
@@ -55,7 +67,6 @@ router.patch("/user/:id/status", authenticateToken, async (req: any, res) => {
     res.status(500).json({ error: "Failed to update user status" });
   }
 });
-
 
 // GET /admin/teacher/confirmed?page=1&limit=10
 router.get("/teachers/confirmed", authenticateToken, async (req: any, res) => {
