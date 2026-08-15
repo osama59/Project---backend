@@ -43,9 +43,7 @@ router.post("/register", async (req, res) => {
           timeZone: data.timeZone,
           subjects: data.subjects,
           profileImageUrl: data.profileImageUrl,
-          verifyCode: verifyCode,
-          // TEMP ONLY FOR TESTING
-          status:"CONFIRMED"
+          verifyCode: 1111,
         },
       });
 
@@ -75,7 +73,7 @@ router.post("/register", async (req, res) => {
         "رمز التحقق الخاص بك في Fluenzy",
         verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
       );
-      
+
       await sendEmail(
         "noreply@resend.dev",
         "aliazaldeeeen@gmail.com",
