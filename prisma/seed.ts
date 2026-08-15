@@ -2,23 +2,60 @@ import { prisma } from "../src/prisma";
 import { faker } from "@faker-js/faker";
 import bcrypt from "bcryptjs";
 
+// Helper: Fetch a realistic user from randomuser.me
+async function fetchRandomUser(
+  gender?: string,
+  minAge?: number,
+  maxAge?: number,
+): Promise<{
+  name: { first: string; last: string };
+  email: string;
+  dob: { date: string; age: number };
+  location: { country: string };
+  picture: { large: string };
+}> {
+  let url = "https://randomuser.me/api/?inc=name,email,dob,location,picture";
+  if (gender) url += `&gender=${gender}`;
+  if (minAge && maxAge) url += `&age=${minAge},${maxAge}`;
+
+  const response = await fetch(url);
+  const data = (await response.json()) as {
+    results?: Array<{
+      name: { first: string; last: string };
+      email: string;
+      dob: { date: string; age: number };
+      location: { country: string };
+      picture: { large: string };
+    }>;
+  };
+
+  const person = data.results?.[0];
+  if (!person) {
+    throw new Error("Failed to fetch a random user from randomuser.me");
+  }
+
+  return person;
+}
+
 async function main() {
   console.log("🌱 Seeding database...");
 
   // 1. Clean up existing data (to avoid duplicates)
   await prisma.rating.deleteMany();
-  await prisma.receipt.deleteMany(); // 👈 ADD THIS
-  await prisma.transaction.deleteMany(); // 👈 ADD THIS
-  await prisma.message.deleteMany(); // 👈 ADD THIS
-  await prisma.report.deleteMany(); // 👈 ADD THIS (CRITICAL!)
+  await prisma.receipt.deleteMany();
+  await prisma.transaction.deleteMany();
+  await prisma.message.deleteMany();
+  await prisma.report.deleteMany();
   await prisma.session.deleteMany();
   await prisma.availability.deleteMany();
   await prisma.language.deleteMany();
   await prisma.teacher.deleteMany();
   await prisma.student.deleteMany();
-  await prisma.user.deleteMany(); // ✅ Now it will work  console.log("🧹 Cleaned up old data.");
+  await prisma.user.deleteMany();
 
-  // 2. List of subjects and languages to rotate
+  console.log("🧹 Cleaned up old data.");
+
+  // 2. Lists of subjects and languages to rotate
   const subjects = [
     "Math",
     "Physics",
@@ -40,40 +77,36 @@ async function main() {
     "Japanese",
   ];
 
-  // 3. Create 30 Teachers
+  // 3. Create 30 Teachers (using randomuser.me API)
+  console.log("👨‍🏫 Creating 30 teachers with realistic data...");
+
   for (let i = 0; i < 30; i++) {
-    const firstName = faker.person.firstName();
-    const lastName = faker.person.lastName();
-    const email = faker.internet.email({ firstName, lastName });
+    // Fetch a realistic person (mixed gender, ages 28-55)
+    const person = await fetchRandomUser(undefined, 28, 55);
     const hashedPw = await bcrypt.hash("password123", 10);
 
-    // Pick 1-3 random subjects for this teacher
     const teacherSubjects = faker.helpers.arrayElements(subjects, {
       min: 1,
       max: 3,
     });
-
-    // Pick 1-2 random languages for this teacher (they TEACH these)
     const teacherLanguages = faker.helpers.arrayElements(languageNames, {
       min: 1,
       max: 2,
     });
 
-    // Create the User and Teacher in a transaction
     const user = await prisma.user.create({
       data: {
-        email,
+        email: person.email,
         password: hashedPw,
-        firstName,
-        lastName,
-        birthDate: faker.date.birthdate(),
-        origin: faker.location.country(),
+        firstName: person.name.first,
+        lastName: person.name.last,
+        birthDate: new Date(person.dob.date),
+        origin: person.location.country,
         timeZone: "America/New_York",
         subjects: teacherSubjects,
         role: "TEACHER",
-        profileImageUrl: faker.image.avatar(), // Fake avatar URL
+        profileImageUrl: person.picture.large,
         status: "APPROVED",
-        // Create the Teacher profile
         teacher: {
           create: {
             introText: faker.lorem.paragraph(),
@@ -82,31 +115,25 @@ async function main() {
             introVideoUrl: faker.image.url(),
           },
         },
-
-        // Create the Languages for this user
         languages: {
           create: teacherLanguages.map((lang) => ({
             name: lang,
             level: faker.number.int({ min: 3, max: 5 }),
-            languageType: "TEACH", // They are teachers
+            languageType: "TEACH",
           })),
         },
       },
-      include: {
-        teacher: true,
-      },
+      include: { teacher: true },
     });
 
-    // 4. Add Availabilities for each teacher (2 slots each)
+    // 4. Add Availabilities (2 slots each)
     const days = ["MONDAY", "WEDNESDAY", "FRIDAY", "TUESDAY", "THURSDAY"];
     const selectedDays = faker.helpers.arrayElements(days, 2);
 
     for (const day of selectedDays) {
-      // Random time between 8 AM and 6 PM
       const startHour = faker.number.int({ min: 8, max: 16 });
       const endHour = startHour + faker.number.int({ min: 1, max: 3 });
 
-      // Format time for Prisma (we just store the time part)
       const fromTime = new Date();
       fromTime.setHours(startHour, 0, 0, 0);
       const toTime = new Date();
@@ -114,7 +141,7 @@ async function main() {
 
       await prisma.availability.create({
         data: {
-          teacherId: user.teacher!.id, // Use the created teacher ID
+          teacherId: user.teacher!.id,
           day: day as any,
           fromTime: fromTime,
           toTime: toTime,
@@ -122,45 +149,41 @@ async function main() {
       });
     }
 
-    // Log progress
-    console.log(`✅ Created teacher: ${firstName} ${lastName} (${email})`);
+    console.log(
+      `✅ Created teacher: ${person.name.first} ${person.name.last} (${person.email})`,
+    );
   }
 
-  console.log("🎉 Seeding complete! 30 teachers created.");
+  console.log("🎉 30 teachers created!");
 
-  // === NEW: Create random ratings ===
-  console.log("⭐ Creating random ratings...");
+  // 5. Create 5 Students (using randomuser.me API, younger)
+  console.log("👩‍🎓 Creating 5 students with realistic data...");
 
-  // 1. Get all teachers and students
-  const allTeachers = await prisma.teacher.findMany();
-  const allStudents = await prisma.student.findMany();
-
-  let students = allStudents;
-
-  // 4. Create some students (so they can leave ratings)
-  const studentUsers = [];
   for (let i = 0; i < 5; i++) {
+    const person = await fetchRandomUser(undefined, 18, 30);
+    const hashedPw = await bcrypt.hash("password123", 10);
+
     const studentSubjects = faker.helpers.arrayElements(subjects, {
       min: 1,
       max: 3,
     });
-    // Pick 1-2 random languages for this teacher (they TEACH these)
     const studentLanguages = faker.helpers.arrayElements(languageNames, {
       min: 1,
       max: 2,
     });
 
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: {
-        email: faker.internet.email(),
-        password: await bcrypt.hash("password123", 10),
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        birthDate: faker.date.birthdate(),
-        origin: faker.location.country(),
+        email: person.email,
+        password: hashedPw,
+        firstName: person.name.first,
+        lastName: person.name.last,
+        birthDate: new Date(person.dob.date),
+        origin: person.location.country,
         timeZone: "America/New_York",
         subjects: studentSubjects,
         role: "STUDENT",
+        profileImageUrl: person.picture.large,
         status: "CONFIRMED",
         student: {
           create: {
@@ -177,23 +200,21 @@ async function main() {
         },
       },
     });
-    studentUsers.push(user);
   }
 
-  students = await prisma.student.findMany();
-  console.log("✅ Created 5 students for testing");
+  console.log("✅ 5 students created!");
 
-  // === SEED: Transactions ===
+  // 6. Get all teachers and students for seeding relations
+  const allTeachers = await prisma.teacher.findMany();
+  const allStudents = await prisma.student.findMany();
+
+  // 7. Seed Transactions
   console.log("💰 Creating transactions...");
 
-  const allTeachersForTx = await prisma.teacher.findMany();
-  const allStudentsForTx = await prisma.student.findMany();
-
   for (let i = 0; i < 5; i++) {
-    const randomTeacher = faker.helpers.arrayElement(allTeachersForTx);
-    const randomStudent = faker.helpers.arrayElement(allStudentsForTx);
+    const randomTeacher = faker.helpers.arrayElement(allTeachers);
+    const randomStudent = faker.helpers.arrayElement(allStudents);
 
-    // Create a completed session
     const session = await prisma.session.create({
       data: {
         studentId: randomStudent.id,
@@ -221,19 +242,14 @@ async function main() {
       },
     });
   }
-  console.log("✅ Created 5 transactions");
+  console.log("✅ 5 transactions created!");
 
-  // === SEED: Messages ===
+  // 8. Seed Messages
   console.log("💬 Creating messages...");
 
-  const allTeachersForMsg = await prisma.teacher.findMany();
-  const allStudentsForMsg = await prisma.student.findMany();
-
-  // Pick 3 random pairs
   for (let i = 0; i < 3; i++) {
-    const teacher = faker.helpers.arrayElement(allTeachersForMsg);
-    const student = faker.helpers.arrayElement(allStudentsForMsg);
-
+    const teacher = faker.helpers.arrayElement(allTeachers);
+    const student = faker.helpers.arrayElement(allStudents);
     const numMessages = faker.number.int({ min: 3, max: 8 });
 
     for (let j = 0; j < numMessages; j++) {
@@ -254,22 +270,16 @@ async function main() {
       });
     }
   }
-  console.log("✅ Created messages for 3 conversations");
+  console.log("✅ Messages created for 3 conversations!");
 
-  // === SEED: Reports ===
+  // 9. Seed Reports
   console.log("📢 Creating reports...");
 
-  const allTeachersForReport = await prisma.teacher.findMany();
-  const allStudentsForReport = await prisma.student.findMany();
-
-  // Get some messages to link to reports (optional)
   const allMessages = await prisma.message.findMany();
 
   for (let i = 0; i < 3; i++) {
-    const reporter = faker.helpers.arrayElement(allStudentsForReport);
-    const reported = faker.helpers.arrayElement(allTeachersForReport);
-
-    // Optionally link a random message
+    const reporter = faker.helpers.arrayElement(allStudents);
+    const reported = faker.helpers.arrayElement(allTeachers);
     const randomMessage = faker.helpers.maybe(
       () => faker.helpers.arrayElement(allMessages),
       { probability: 0.5 },
@@ -297,9 +307,9 @@ async function main() {
       },
     });
   }
-  console.log("✅ Created 3 pending reports");
+  console.log("✅ 3 pending reports created!");
 
-  // === SEED: Receipts ===
+  // 10. Seed Receipts
   console.log("🧾 Creating receipts...");
 
   const allUsers = await prisma.user.findMany();
@@ -315,16 +325,17 @@ async function main() {
       },
     });
   }
-  console.log("✅ Created 5 receipts");
+  console.log("✅ 5 receipts created!");
 
-  // 3. For each teacher, add random ratings
+  // 11. Seed Ratings
+  console.log("⭐ Creating ratings...");
+
   for (const teacher of allTeachers) {
     const numRatings = faker.number.int({ min: 3, max: 10 });
-    const shuffledStudents = faker.helpers.shuffle(students);
+    const shuffledStudents = faker.helpers.shuffle(allStudents);
     const selectedStudents = shuffledStudents.slice(0, numRatings);
 
     for (const student of selectedStudents) {
-      // Create a dummy session for this student-teacher pair
       const dummySession = await prisma.session.create({
         data: {
           studentId: student.id,
@@ -349,9 +360,11 @@ async function main() {
     }
   }
 
-  console.log(`✅ Created ratings for ${allTeachers.length} teachers`);
+  console.log(`✅ Ratings created for ${allTeachers.length} teachers!`);
 
-  // Creating a new admin:
+  // 12. Create Admin
+  console.log("👑 Creating admin...");
+
   const admin = await prisma.user.create({
     data: {
       email: process.env.ADMIN_EMAIL!,
@@ -362,14 +375,19 @@ async function main() {
       origin: "Syria",
       timeZone: "America/New_York",
       role: "ADMIN",
+      status: "CONFIRMED",
     },
   });
+
   if (admin) {
-    console.log(`✅ Created Admin account`);
+    console.log("✅ Admin account created!");
   } else {
-    console.log(` ❌ Failed Admin account`);
+    console.log("❌ Admin creation failed!");
   }
+
+  console.log("🎉 Seeding complete!");
 }
+
 main()
   .catch((e) => {
     console.error("❌ Seeding failed:", e);

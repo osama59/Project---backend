@@ -55,3 +55,23 @@ export async function sendEmail(
     html: html_code,
   });
 }
+
+/*
+
+import * as Brevo from '@brevo/api';
+
+const apiInstance = new Brevo.TransactionalEmailsApi();
+apiInstance.setApiKey(Brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY!);
+
+export async function sendEmail(to: string, subject: string, html: string) {
+  await apiInstance.sendTransacEmail({
+    sender: { email: "noreply@fluenzy.com", name: "Fluenzy" },
+    to: [{ email: to }],
+    subject: subject,
+    htmlContent: html,
+  });
+}
+
+
+
+*/
