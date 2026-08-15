@@ -44,6 +44,7 @@ router.post("/register", async (req, res) => {
           subjects: data.subjects,
           role: data.role,
           profileImageUrl: data.profileImageUrl,
+          // TEST SECTION
           verifyCode: 111111,
         },
       });

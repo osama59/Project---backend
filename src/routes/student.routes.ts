@@ -43,6 +43,7 @@ router.post("/register", async (req, res) => {
           timeZone: data.timeZone,
           subjects: data.subjects,
           profileImageUrl: data.profileImageUrl,
+          // TEST SECTION
           verifyCode: 111111,
         },
       });

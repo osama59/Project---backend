@@ -209,7 +209,8 @@ router.post("/resend-verification", async (req, res) => {
     await prisma.user.update({
       where: { id: user.id },
       data: {
-        verifyCode: verifyCode,
+        // TEST SECTION
+        verifyCode: 111111,
       },
     });
     const assetBaseUrl = process.env.ASSET_BASE_URL!;
