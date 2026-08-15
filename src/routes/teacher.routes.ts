@@ -44,7 +44,7 @@ router.post("/register", async (req, res) => {
           subjects: data.subjects,
           role: data.role,
           profileImageUrl: data.profileImageUrl,
-          verifyCode: 1111,
+          verifyCode: 111111,
         },
       });
       const teacher = await tx.teacher.create({
