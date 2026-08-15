@@ -45,6 +45,8 @@ router.post("/register", async (req, res) => {
           role: data.role,
           profileImageUrl: data.profileImageUrl,
           verifyCode: verifyCode,
+          // TEMP ONLY FOR TESTING
+          status: "CONFIRMED",
         },
       });
       const teacher = await tx.teacher.create({

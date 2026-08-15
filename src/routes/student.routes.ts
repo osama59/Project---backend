@@ -44,6 +44,8 @@ router.post("/register", async (req, res) => {
           subjects: data.subjects,
           profileImageUrl: data.profileImageUrl,
           verifyCode: verifyCode,
+          // TEMP ONLY FOR TESTING
+          status:"CONFIRMED"
         },
       });
 
