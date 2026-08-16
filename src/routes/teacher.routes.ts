@@ -45,7 +45,8 @@ router.post("/register", async (req, res) => {
           subjects: data.subjects,
           role: data.role,
           profileImageUrl: data.profileImageUrl,
-          verifyCode: verifyCode,
+          // TEST CODE
+          verifyCode: 111111,
         },
       });
       const teacher = await tx.teacher.create({
@@ -86,11 +87,11 @@ router.post("/register", async (req, res) => {
     const assetBaseUrl = process.env.ASSET_BASE_URL!;
     // ------TEMP Double email test section------
 
-    await sendEmailNodemailer(
-      "aliazaldeeeen@gmail.com",
-      "رمز التحقق الخاص بك في Fluenzy",
-      verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
-    );
+    // await sendEmailNodemailer(
+    //   "aliazaldeeeen@gmail.com",
+    //   "رمز التحقق الخاص بك في Fluenzy",
+    //   verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
+    // );
 
     res.json(result);
   } catch (err) {

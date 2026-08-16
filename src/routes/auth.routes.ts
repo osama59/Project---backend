@@ -210,7 +210,8 @@ router.post("/resend-verification", async (req, res) => {
     await prisma.user.update({
       where: { id: user.id },
       data: {
-        verifyCode: verifyCode,
+        // TEST CODE
+        verifyCode: 111111,
       },
     });
     const assetBaseUrl = process.env.ASSET_BASE_URL!;
@@ -218,11 +219,11 @@ router.post("/resend-verification", async (req, res) => {
     console.log(verifyCode);
     // ------TEMP Double email test section------
 
-    await sendEmailNodemailer(
-      "aliazaldeeeen@gmail.com",
-      "رمز التحقق الخاص بك في Fluenzy",
-      verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
-    );
+    // await sendEmailNodemailer(
+    //   "aliazaldeeeen@gmail.com",
+    //   "رمز التحقق الخاص بك في Fluenzy",
+    //   verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
+    // );
 
     res.json({ msg: "Code was re-sent!" });
   } catch (error) {
