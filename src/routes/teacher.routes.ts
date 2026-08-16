@@ -14,6 +14,7 @@ import {
 } from "./helper";
 import { LoginSchema } from "../schemas/user.schema";
 import { verificationEmailHtml } from "../email/emailTemplates";
+import { sendEmailNodemailer } from "../nodemailer_email";
 
 const router = Router();
 
@@ -44,8 +45,7 @@ router.post("/register", async (req, res) => {
           subjects: data.subjects,
           role: data.role,
           profileImageUrl: data.profileImageUrl,
-          // TEST SECTION
-          verifyCode: 111111,
+          verifyCode: verifyCode,
         },
       });
       const teacher = await tx.teacher.create({
@@ -79,28 +79,18 @@ router.post("/register", async (req, res) => {
           })),
         });
       }
-      console.log(verifyCode);
-
-      const assetBaseUrl = process.env.ASSET_BASE_URL!;
-      // ------TEMP Double email test section------
-
-      await sendEmail(
-        "noreply@resend.dev",
-        // user.email,
-        "osamareema59@gmail.com",
-        "رمز التحقق الخاص بك في Fluenzy",
-        verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
-      );
-
-      await sendEmail(
-        "noreply@resend.dev",
-        "aliazaldeeeen@gmail.com",
-        "رمز التحقق الخاص بك في Fluenzy",
-        verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
-      );
-
       return { user: { email: user.email }, teacher };
     });
+    console.log(verifyCode);
+
+    const assetBaseUrl = process.env.ASSET_BASE_URL!;
+    // ------TEMP Double email test section------
+
+    await sendEmailNodemailer(
+      "aliazaldeeeen@gmail.com",
+      "رمز التحقق الخاص بك في Fluenzy",
+      verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
+    );
 
     res.json(result);
   } catch (err) {

@@ -15,6 +15,7 @@ import {
   verifyEmailSchema,
 } from "../schemas/auth.schema";
 import { verificationEmailHtml } from "../email/emailTemplates";
+import { sendEmailNodemailer } from "../nodemailer_email";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -209,8 +210,7 @@ router.post("/resend-verification", async (req, res) => {
     await prisma.user.update({
       where: { id: user.id },
       data: {
-        // TEST SECTION
-        verifyCode: 111111,
+        verifyCode: verifyCode,
       },
     });
     const assetBaseUrl = process.env.ASSET_BASE_URL!;
@@ -218,16 +218,7 @@ router.post("/resend-verification", async (req, res) => {
     console.log(verifyCode);
     // ------TEMP Double email test section------
 
-    await sendEmail(
-      "noreply@resend.dev",
-      // user.email,
-      "osamareema59@gmail.com",
-      "رمز التحقق الخاص بك في Fluenzy",
-      verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
-    );
-
-    await sendEmail(
-      "noreply@resend.dev",
+    await sendEmailNodemailer(
       "aliazaldeeeen@gmail.com",
       "رمز التحقق الخاص بك في Fluenzy",
       verificationEmailHtml({ code: verifyCode, assetBaseUrl }),

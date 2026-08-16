@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { AdminUpdateReport, AdminUpdateStatus } from "../schemas/admin.schema";
 import { teacherApprovalEmailHtml } from "../email/emailTemplates";
+import { sendEmailNodemailer } from "../nodemailer_email";
 
 const router = Router();
 
@@ -40,16 +41,7 @@ router.patch("/user/:id/status", authenticateToken, async (req: any, res) => {
 
       // ------TEMP Double email test section------
 
-      await sendEmail(
-        "noreply@resend.dev",
-        // user.email,
-        "osamareema59@gmail.com",
-        "تم قبول طلبك في Fluenzy!",
-        teacherApprovalEmailHtml({ firstName: user.firstName, assetBaseUrl }),
-      );
-      
-      await sendEmail(
-        "noreply@resend.dev",
+      await sendEmailNodemailer(
         "aliazaldeeeen@gmail.com",
         "تم قبول طلبك في Fluenzy!",
         teacherApprovalEmailHtml({ firstName: user.firstName, assetBaseUrl }),
