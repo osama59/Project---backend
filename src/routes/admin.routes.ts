@@ -41,7 +41,8 @@ router.patch("/user/:id/status", authenticateToken, async (req: any, res) => {
 
       // ------TEMP Double email test section------
 
-      await sendEmailNodemailer(
+      await sendEmail(
+        `"Fluenzy" <noreply@fluenzy.me>`,
         "aliazaldeeeen@gmail.com",
         "تم قبول طلبك في Fluenzy!",
         teacherApprovalEmailHtml({ firstName: user.firstName, assetBaseUrl }),

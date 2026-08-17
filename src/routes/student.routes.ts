@@ -42,8 +42,7 @@ router.post("/register", async (req, res) => {
           timeZone: data.timeZone,
           subjects: data.subjects,
           profileImageUrl: data.profileImageUrl,
-          // TEST CODE
-          verifyCode: 111111,
+          verifyCode: verifyCode,
         },
       });
 
@@ -63,7 +62,7 @@ router.post("/register", async (req, res) => {
           languageType: lang.languageType,
         })),
       });
-      
+
       return { user: { email: user.email }, student };
     });
 
@@ -71,16 +70,19 @@ router.post("/register", async (req, res) => {
     const assetBaseUrl = process.env.ASSET_BASE_URL!;
     // ------TEMP Double email test section------
 
-    // await sendEmailNodemailer(
-    //   "aliazaldeeeen@gmail.com",
-    //   "رمز التحقق الخاص بك في Fluenzy",
-    //   verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
-    // );
-    // await sendEmailNodemailer(
-    //   "alesarreema@gmail.com",
-    //   "رمز التحقق الخاص بك في Fluenzy",
-    //   verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
-    // );
+    await sendEmail(
+      `"Fluenzy" <noreply@fluenzy.me>`,
+      "alesarreema@gmail.com",
+      "رمز التحقق الخاص بك في Fluenzy",
+      verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
+    );
+
+    await sendEmail(
+      `"Fluenzy" <noreply@fluenzy.me>`,
+      "aliazaldeeeen@gmail.com",
+      "رمز التحقق الخاص بك في Fluenzy",
+      verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
+    );
 
     res.json(result);
   } catch (err) {

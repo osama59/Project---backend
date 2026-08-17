@@ -13,6 +13,7 @@ export const SessionUpdateSchema = z.object({
   realEndTime: z.iso
     .datetime({ message: "Invalid date format. Use ISO 8601." })
     .optional(),
+  // Dangerous status update
   status: z.enum(["CONFIRMED", "CANCELLED", "COMPLETED"]),
 });
 

@@ -9,6 +9,7 @@ export const UserBaseSchema = z.object({
   origin: z.string(),
   profileImageUrl: z.url().optional(),
   timeZone: z.string(),
+  // This Hve to be updated 
   role: z.enum(["STUDENT", "TEACHER"]).optional(),
   subjects: z.array(z.string()),
   languages: z.array(

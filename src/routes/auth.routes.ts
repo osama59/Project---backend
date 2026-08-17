@@ -219,11 +219,12 @@ router.post("/resend-verification", async (req, res) => {
     console.log(verifyCode);
     // ------TEMP Double email test section------
 
-    // await sendEmailNodemailer(
-    //   "aliazaldeeeen@gmail.com",
-    //   "رمز التحقق الخاص بك في Fluenzy",
-    //   verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
-    // );
+    await sendEmail(
+      `"Fluenzy" <noreply@fluenzy.me>`,
+      "aliazaldeeeen@gmail.com",
+      "رمز التحقق الخاص بك في Fluenzy",
+      verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
+    );
 
     res.json({ msg: "Code was re-sent!" });
   } catch (error) {

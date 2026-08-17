@@ -7,12 +7,9 @@ import adminRoutes from "./routes/admin.routes";
 import authRoutes from "./routes/auth.routes";
 import messagesRoutes from "./routes/messages.routes";
 import reportRoutes from "./routes/report.routes";
-import swaggerUi from "swagger-ui-express";
-import { swaggerSpec } from "./swagger";
 
 const app = express();
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(express.json());
 app.use("/user", userRouts);
 app.use("/student", studentRouts);
