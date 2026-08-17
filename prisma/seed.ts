@@ -80,7 +80,7 @@ async function main() {
   // 3. Create 30 Teachers (using randomuser.me API)
   console.log("👨‍🏫 Creating 30 teachers with realistic data...");
 
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 300; i++) {
     // Fetch a realistic person (mixed gender, ages 28-55)
     const person = await fetchRandomUser(undefined, 28, 55);
     const hashedPw = await bcrypt.hash("password123", 10);

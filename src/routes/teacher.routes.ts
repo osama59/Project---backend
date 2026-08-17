@@ -43,7 +43,7 @@ router.post("/register", async (req, res) => {
           origin: data.origin,
           timeZone: data.timeZone,
           subjects: data.subjects,
-          role: data.role,
+          role: "TEACHER",
           profileImageUrl: data.profileImageUrl,
           verifyCode: verifyCode,
         },
