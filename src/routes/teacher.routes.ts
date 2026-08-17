@@ -165,7 +165,7 @@ router.get("/teachers", authenticateToken, async (req: any, res) => {
             email: true,
             firstName: true,
             lastName: true,
-            age: true,
+            birthDate: true,
             origin: true,
             profileImageUrl: true,
             timeZone: true,
