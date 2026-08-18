@@ -125,6 +125,18 @@ router.patch("/profile", authenticateToken, async (req: any, res) => {
       return res.status(404).json({ error: "user not found" });
     }
 
+    // If the user is trying to change their email
+    if (data.email && data.email !== user.email) {
+      const existingUser = await prisma.user.findUnique({
+        where: { email: data.email },
+      });
+      if (existingUser) {
+        return res
+          .status(400)
+          .json({ error: "Email already in use by another account" });
+      }
+    }
+
     const result = await prisma.$transaction(async (tx) => {
       const updatedUser = await tx.user.update({
         where: { id: user.id },
