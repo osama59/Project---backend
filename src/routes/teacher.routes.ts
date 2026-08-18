@@ -225,37 +225,46 @@ router.get("/teachers", authenticateToken, async (req: any, res) => {
   }
 });
 
-// GET /teacher/:id/availability?date=2026-07-20
+// GET /teacher/:id/availability?startDate=2026-08-20&endDate=2026-08-30
 router.get("/:id/availability", async (req: any, res) => {
   try {
     const { id } = req.params;
-    const { date } = req.query;
+    const { startDate, endDate } = req.query;
 
-    if (!date) {
+    const teacher = await prisma.teacher.findUnique({
+      where: { userId: id },
+    });
+
+    if (!teacher) {
+      return res.status(400).json({ error: "no teacher with this id :(" });
+    }
+
+    if (!(startDate && endDate)) {
       return res.status(400).json({ error: "Date is required" });
     }
 
-    // Convert date string to Date object
-    const selectedDate = new Date(date as string);
-    const dayOfWeek = selectedDate
-      .toLocaleDateString("en-US", { weekday: "long" })
-      .toUpperCase();
-
-    // Fetch teacher's availability for that day
-    // Here I think I have to fetch for the next 7 days instead !
-    const availability = await prisma.availability.findMany({
-      where: {
-        teacherId: id,
-        day: dayOfWeek as any, // "MONDAY", "TUESDAY", etc.
-      },
-    });
-
     // Fetch booked sessions for that teacher on that date
-    const startOfDay = new Date(selectedDate);
+    const startOfDay = new Date(startDate);
     startOfDay.setHours(0, 0, 0, 0);
 
-    const endOfDay = new Date(selectedDate);
+    const endOfDay = new Date(endDate);
     endOfDay.setHours(23, 59, 59, 999);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (startOfDay < today) {
+      return res
+        .status(400)
+        .json({ error: "Cannot fetch availability for past dates" });
+    }
+
+    // There's only 7 days a week so no need to fetch by day :)
+    const availability = await prisma.availability.findMany({
+      where: {
+        teacherId: teacher.id,
+      },
+    });
 
     const bookedSessions = await prisma.session.findMany({
       where: {
@@ -293,6 +302,15 @@ router.patch("/profile", authenticateToken, async (req: any, res) => {
 
     if (!user) {
       return res.status(404).json({ error: "user not found" });
+    }
+
+    if (user.role !== "TEACHER") {
+      return res
+        .status(403)
+        .json({ error: "Access denied. This endpoint is for teachers only." });
+    }
+    if (!user.teacher) {
+      return res.status(404).json({ error: "Teacher profile not found" });
     }
 
     const result = await prisma.$transaction(async (tx) => {

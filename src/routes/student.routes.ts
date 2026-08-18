@@ -144,6 +144,13 @@ router.patch("/profile", authenticateToken, async (req: any, res) => {
         .json({ error: "This endpoint is for students only" });
     }
 
+    const studentRecord = await prisma.student.findUnique({
+      where: { userId: user.id },
+    });
+    if (!studentRecord) {
+      return res.status(404).json({ error: "Student profile not found" });
+    }
+
     const result = await prisma.$transaction(async (tx) => {
       const updatedUser = await tx.user.update({
         where: { id: user.id },
