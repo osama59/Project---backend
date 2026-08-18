@@ -35,7 +35,7 @@ export const TeacherUpdateSchema = z.object({
   email: z.email(),
   firstName: z.string(),
   lastName: z.string(),
-  birthDate: z.date(),
+  birthDate: z.iso.datetime({ message: "Invalid date format. Use ISO 8601." }),
   origin: z.string(),
   profileImageUrl: z.url().optional(),
   timeZone: z.string(),
