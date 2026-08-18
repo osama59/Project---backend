@@ -137,6 +137,13 @@ router.patch("/profile", authenticateToken, async (req: any, res) => {
       }
     }
 
+    // Inside PATCH /student/profile, after fetching the user
+    if (user.role !== "STUDENT") {
+      return res
+        .status(400)
+        .json({ error: "This endpoint is for students only" });
+    }
+
     const result = await prisma.$transaction(async (tx) => {
       const updatedUser = await tx.user.update({
         where: { id: user.id },
