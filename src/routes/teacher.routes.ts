@@ -268,7 +268,7 @@ router.get("/:id/availability", async (req: any, res) => {
 
     const bookedSessions = await prisma.session.findMany({
       where: {
-        teacherId: id,
+        teacherId: teacher.id,
         startTime: {
           gte: startOfDay,
           lte: endOfDay,
