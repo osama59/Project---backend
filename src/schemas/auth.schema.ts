@@ -18,7 +18,7 @@ export const GoogleRegisterSchema = z.object({
       }),
     )
     .optional(),
-  role: z.enum(["STUDENT", "TEACHER"]),
+  role: z.enum(["STUDENT", "TEACHER"]).optional(),
 
   // STUDENT FIELDS
   preferedPriceMin: z.number().optional(),
@@ -28,7 +28,8 @@ export const GoogleRegisterSchema = z.object({
   introVideoUrl: z.url().optional(),
   introText: z.string().optional(),
   hourPrice: z.number().positive().optional(),
-  availability: z.array(AvailabilitySlotSchema).optional(),
+  certificateImageUrl: z.url().optional(),
+  availabilities: z.array(AvailabilitySlotSchema).optional(),
 });
 
 export const verifyEmailSchema = z.object({

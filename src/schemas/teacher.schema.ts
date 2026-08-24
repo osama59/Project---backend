@@ -28,7 +28,7 @@ export const TeacherRegisterSchema = UserBaseSchema.extend({
   introVideoUrl: z.url().optional(),
   introText: z.string(),
   hourPrice: z.number().positive(),
-  availability: z.array(AvailabilitySlotSchema),
+  availabilities: z.array(AvailabilitySlotSchema),
 });
 
 export const TeacherUpdateSchema = z.object({
@@ -50,5 +50,7 @@ export const TeacherUpdateSchema = z.object({
   introVideoUrl: z.url().optional(),
   introText: z.string(),
   hourPrice: z.number().positive(),
-  availability: z.array(AvailabilitySlotSchema),
+  availabilities: z.array(AvailabilitySlotSchema),
+  certificateImageUrl: z.url().optional(),
+
 });

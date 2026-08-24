@@ -15,7 +15,6 @@ import {
   verifyEmailSchema,
 } from "../schemas/auth.schema";
 import { verificationEmailHtml } from "../email/emailTemplates";
-import { sendEmailNodemailer } from "../nodemailer_email";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
