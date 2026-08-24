@@ -5,10 +5,10 @@ export const GoogleRegisterSchema = z.object({
   idToken: z.string(),
 
   // USER FIELD
-  birthDate: z.date().optional(),
-  origin: z.string().optional(),
-  timeZone: z.string().optional(),
-  subjects: z.array(z.string()).optional(),
+  birthDate: z.date(),
+  origin: z.string(),
+  timeZone: z.string(),
+  subjects: z.array(z.string()),
   languages: z
     .array(
       z.object({
@@ -18,7 +18,7 @@ export const GoogleRegisterSchema = z.object({
       }),
     )
     .optional(),
-  role: z.enum(["STUDENT", "TEACHER"]).optional(),
+  role: z.enum(["STUDENT", "TEACHER"]),
 
   // STUDENT FIELDS
   preferedPriceMin: z.number().optional(),

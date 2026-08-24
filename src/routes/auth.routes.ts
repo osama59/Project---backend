@@ -17,7 +17,7 @@ import {
 import { verificationEmailHtml } from "../email/emailTemplates";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
+await client.getFederatedSignonCertsAsync();
 const router = Router();
 
 // POST /auth/google
@@ -77,7 +77,8 @@ router.post("/google", async (req, res) => {
       });
     } else {
       const data = getData(GoogleRegisterSchema, req);
-      if (!data) return res.status(400).json({ error: "Invalid input" });
+      if (!data)
+        return res.status(400).json({ error: "The user is not signd up yet" });
       const dummyHashedPw = await bcrypt.hash(Math.random().toString(36), 10);
       const result = await prisma.$transaction(async (tx) => {
         const user = await prisma.user.create({
@@ -151,7 +152,7 @@ router.post("/google", async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(401).json({ error: "Invalid Google token" });
+    res.status(500).json({ error: "something went wrong" });
   }
 });
 
