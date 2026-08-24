@@ -15,8 +15,6 @@ import {
   verifyEmailSchema,
 } from "../schemas/auth.schema";
 import { verificationEmailHtml } from "../email/emailTemplates";
-import { Role } from "../generated/prisma/enums";
-import { use } from "react";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -40,7 +38,7 @@ router.post("/google", async (req, res) => {
     const email = payload?.email;
     const firstName = payload?.given_name || "";
     const lastName = payload?.family_name || "";
-    const profileImageUrlmageUrl = payload?.picture;
+    const profileImageUrl = payload?.picture;
     if (!payload || !googleId || !email) {
       return res.status(400).json({ error: "Invalid Google token payload" });
     }
@@ -57,6 +55,18 @@ router.post("/google", async (req, res) => {
             googleId: googleId,
           },
         });
+      }
+
+      const teacher = await prisma.teacher.findUnique({
+        where: { userId: existingUser.id },
+      });
+
+      if (teacher) {
+        if (existingUser.status != "APPROVED") {
+          return res
+            .status(400)
+            .json({ error: "Wait until approaved" });
+        }
       }
 
       const token = generateToken(existingUser);
@@ -82,7 +92,9 @@ router.post("/google", async (req, res) => {
             origin: data.origin,
             timeZone: data.timeZone,
             subjects: data.subjects,
-            profileImageUrl: profileImageUrlmageUrl,
+            profileImageUrl: profileImageUrl,
+            // The user email is confirmed by google
+            status: "CONFIRMED",
             role: data.role,
           },
         });
