@@ -15,6 +15,8 @@ import {
   verifyEmailSchema,
 } from "../schemas/auth.schema";
 import { verificationEmailHtml } from "../email/emailTemplates";
+import { Role } from "../generated/prisma/enums";
+import { use } from "react";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -60,13 +62,9 @@ router.post("/google", async (req, res) => {
       const token = generateToken(existingUser);
 
       return res.json({
-        token,
-        user: {
-          id: existingUser.id,
-          email: existingUser.email,
-          firstName: existingUser.firstName,
-          lastName: existingUser.lastName,
-        },
+        token: token,
+        id: existingUser.id,
+        role: existingUser.role,
       });
     } else {
       const data = getData(GoogleRegisterSchema, req);
@@ -110,15 +108,9 @@ router.post("/google", async (req, res) => {
 
           const token = generateToken(user);
           return {
-            token,
-            user: {
-              id: user.id,
-              email: user.email,
-              firstName: user.firstName,
-              lastName: user.lastName,
-              role: user.role,
-            },
-            student,
+            token: token,
+            id: user.id,
+            role: user.role,
           };
         } else if (data.role == "TEACHER") {
           const teacher = await tx.teacher.create({
@@ -133,15 +125,10 @@ router.post("/google", async (req, res) => {
           });
           const token = generateToken(user);
           return {
-            token,
-            user: {
-              id: user.id,
-              email: user.email,
-              firstName: user.firstName,
-              lastName: user.lastName,
-              role: user.role,
-            },
-            teacher,
+            //teachers must be verifide before gettinng a token
+            token: "",
+            id: user.id,
+            role: user.role,
           };
         } else {
           return { error: "BAD REQUEST" };
