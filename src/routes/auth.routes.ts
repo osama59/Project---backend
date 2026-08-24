@@ -63,9 +63,7 @@ router.post("/google", async (req, res) => {
 
       if (teacher) {
         if (existingUser.status != "APPROVED") {
-          return res
-            .status(400)
-            .json({ error: "Wait until approaved" });
+          return res.status(400).json({ error: "Wait until approaved" });
         }
       }
 
@@ -75,6 +73,7 @@ router.post("/google", async (req, res) => {
         token: token,
         id: existingUser.id,
         role: existingUser.role,
+        status: existingUser.status,
       });
     } else {
       const data = getData(GoogleRegisterSchema, req);
@@ -123,6 +122,7 @@ router.post("/google", async (req, res) => {
             token: token,
             id: user.id,
             role: user.role,
+            status: user.status,
           };
         } else if (data.role == "TEACHER") {
           const teacher = await tx.teacher.create({
@@ -141,6 +141,7 @@ router.post("/google", async (req, res) => {
             token: "",
             id: user.id,
             role: user.role,
+            status: user.status,
           };
         } else {
           return { error: "BAD REQUEST" };
