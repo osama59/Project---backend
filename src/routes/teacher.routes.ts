@@ -55,7 +55,6 @@ router.post("/register", async (req, res) => {
           introVideoUrl: data.introVideoUrl,
           introText: data.introText,
           hourPrice: data.hourPrice,
-          availabilities: data.availabilities,
         },
       });
 
@@ -79,7 +78,7 @@ router.post("/register", async (req, res) => {
           })),
         });
       }
-      return { user: { email: user.email }, teacher };
+      return { user: { email: user.email }, teacher, };
     });
     console.log(verifyCode);
 

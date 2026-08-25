@@ -17,7 +17,6 @@ import {
 import { verificationEmailHtml } from "../email/emailTemplates";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-await client.getFederatedSignonCertsAsync();
 const router = Router();
 
 // POST /auth/google
@@ -27,7 +26,8 @@ router.post("/google", async (req, res) => {
     if (!idToken) {
       return res.status(400).json({ error: "BAD REQUEST" });
     }
-
+    
+    await client.getFederatedSignonCertsAsync();
     const ticket = await client.verifyIdToken({
       idToken: idToken,
       audience: process.env.GOOGLE_CLIENT_ID,
@@ -133,9 +133,21 @@ router.post("/google", async (req, res) => {
               introVideoUrl: data.introVideoUrl,
               introText: data.introText,
               hourPrice: data.hourPrice,
-              availabilities: data.availabilities,
             },
           });
+
+          // 3. Create Availability Slots
+          if (data.availability && data.availability.length > 0) {
+            await tx.availability.createMany({
+              data: data.availability.map((slot: any) => ({
+                teacherId: teacher.id,
+                day: slot.day,
+                fromTime: new Date(`1970-01-01T${slot.fromTime}:00.000Z`),
+                toTime: new Date(`1970-01-01T${slot.toTime}:00.000Z`),
+              })),
+            });
+          }
+
           const token = generateToken(user);
           return {
             //teachers must be verifide before gettinng a token

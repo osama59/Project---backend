@@ -29,7 +29,7 @@ export const GoogleRegisterSchema = z.object({
   introText: z.string().optional(),
   hourPrice: z.number().positive().optional(),
   certificateImageUrl: z.url().optional(),
-  availabilities: z.array(AvailabilitySlotSchema).optional(),
+  availability: z.array(AvailabilitySlotSchema).optional(),
 });
 
 export const verifyEmailSchema = z.object({
