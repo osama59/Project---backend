@@ -61,9 +61,16 @@ router.patch("/user/:id/status", authenticateToken, async (req: any, res) => {
   }
 });
 
-// GET /admin/teacher/confirmed?page=1&limit=10
+// GET /admin/teachers/confirmed?page=1&limit=10
 router.get("/teachers/confirmed", authenticateToken, async (req: any, res) => {
   try {
+    const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+    if (!user || user.role != "ADMIN") {
+      return res
+        .status(403)
+        .json({ error: "Sorry accessing this route is forbiden :)" });
+    }
+
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
@@ -100,6 +107,103 @@ router.get("/teachers/confirmed", authenticateToken, async (req: any, res) => {
 
     res.json({
       teachers,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Failed to fetch profile" });
+  }
+});
+
+// GET /admin/teachers?page=1&limit=10
+router.get("/teachers", authenticateToken, async (req: any, res) => {
+  try {
+    const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+    if (!user || user.role != "ADMIN") {
+      return res
+        .status(403)
+        .json({ error: "Sorry accessing this route is forbiden :)" });
+    }
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const teachers = await prisma.teacher.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+            subjects: true,
+            profileImageUrl: true,
+            status: true,
+            role: true,
+          },
+        },
+      },
+    });
+
+    const total = await prisma.teacher.count();
+
+    res.json({
+      teachers,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Failed to fetch profile" });
+  }
+});
+
+// GET /admin/students?page=1&limit=10
+router.get("/students", authenticateToken, async (req: any, res) => {
+  try {
+    const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+    if (!user || user.role != "ADMIN") {
+      return res
+        .status(403)
+        .json({ error: "Sorry accessing this route is forbiden :)" });
+    }
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const students = await prisma.student.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+            profileImageUrl: true,
+            status: true,
+            role: true,
+          },
+        },
+      },
+    });
+
+    const total = await prisma.student.count();
+
+    res.json({
+      students: students,
       pagination: {
         page,
         limit,
