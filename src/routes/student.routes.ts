@@ -12,7 +12,6 @@ import {
   sendEmail,
 } from "./helper";
 import { verificationEmailHtml } from "../email/emailTemplates";
-import { sendEmailNodemailer } from "../nodemailer_email";
 
 const router = Router();
 
@@ -162,6 +161,7 @@ router.patch("/profile", authenticateToken, async (req: any, res) => {
           origin: data.origin,
           timeZone: data.timeZone,
           subjects: data.subjects,
+          profileImageUrl: data.profileImageUrl,
         },
       });
 

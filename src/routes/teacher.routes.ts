@@ -78,7 +78,7 @@ router.post("/register", async (req, res) => {
           })),
         });
       }
-      return { user: { email: user.email }, teacher, };
+      return { user: { email: user.email }, teacher };
     });
     console.log(verifyCode);
 
@@ -323,12 +323,14 @@ router.patch("/profile", authenticateToken, async (req: any, res) => {
           origin: data.origin,
           timeZone: data.timeZone,
           subjects: data.subjects,
+          profileImageUrl: data.profileImageUrl,
         },
       });
 
       const updatedTeacher = await tx.teacher.update({
         where: { userId: user.id },
         data: {
+          certificateImageUrl: data.certificateImageUrl,
           introVideoUrl: data.introVideoUrl,
           introText: data.introText,
           hourPrice: data.hourPrice,
