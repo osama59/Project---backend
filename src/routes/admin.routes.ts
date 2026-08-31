@@ -300,6 +300,60 @@ router.get("/reports", authenticateToken, async (req: any, res) => {
   }
 });
 
+// GET /admin/transactions?page=1&limit=10
+router.get("/transactions", authenticateToken, async (req: any, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+    if (!user || user.role != "ADMIN") {
+      return res
+        .status(403)
+        .json({ error: "Sorry accessing this route is forbiden :)" });
+    }
+
+    const transactions = await prisma.transaction.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        session: {
+          select: {
+            status: true,
+          },
+        },
+        student: {
+          include: {
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+                role: true,
+              },
+            },
+          },
+        },
+        teacher: {
+          include: {
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+                role: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    res.json(transactions);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Failed to get transactions data" });
+  }
+});
+
 // GET /admin/report/messages_history/:id?page=1&limit=10
 router.get(
   "/reports/:id/messages",
