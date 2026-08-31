@@ -26,7 +26,7 @@ router.post("/google", async (req, res) => {
     if (!idToken) {
       return res.status(400).json({ error: "BAD REQUEST" });
     }
-    
+
     await client.getFederatedSignonCertsAsync();
     const ticket = await client.verifyIdToken({
       idToken: idToken,
@@ -234,6 +234,13 @@ router.post("/resend-verification", async (req, res) => {
     await sendEmail(
       `"Fluenzy" <noreply@fluenzy.me>`,
       "aliazaldeeeen@gmail.com",
+      "رمز التحقق الخاص بك في Fluenzy",
+      verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
+    );
+
+    await sendEmail(
+      `"Fluenzy" <noreply@fluenzy.me>`,
+      "alesarreema@gmail.com",
       "رمز التحقق الخاص بك في Fluenzy",
       verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
     );
