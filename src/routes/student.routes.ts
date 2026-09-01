@@ -71,7 +71,7 @@ router.post("/register", async (req, res) => {
 
     await sendEmail(
       `"Fluenzy" <noreply@fluenzy.me>`,
-      "alesarreema@gmail.com",
+      "hayatalouda777@gmail.com",
       "رمز التحقق الخاص بك في Fluenzy",
       verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
     );

@@ -47,6 +47,13 @@ router.patch("/user/:id/status", authenticateToken, async (req: any, res) => {
         "تم قبول طلبك في Fluenzy!",
         teacherApprovalEmailHtml({ firstName: user.firstName, assetBaseUrl }),
       );
+
+      await sendEmail(
+        `"Fluenzy" <noreply@fluenzy.me>`,
+        "hayatalouda777@gmail.com",
+        "تم قبول طلبك في Fluenzy!",
+        teacherApprovalEmailHtml({ firstName: user.firstName, assetBaseUrl }),
+      );
     }
 
     const userStatus = await prisma.user.update({

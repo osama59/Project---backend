@@ -238,9 +238,16 @@ router.post("/resend-verification", async (req, res) => {
       verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
     );
 
+    // await sendEmail(
+    //   `"Fluenzy" <noreply@fluenzy.me>`,
+    //   "alesarreema@gmail.com",
+    //   "رمز التحقق الخاص بك في Fluenzy",
+    //   verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
+    // );
+    
     await sendEmail(
       `"Fluenzy" <noreply@fluenzy.me>`,
-      "alesarreema@gmail.com",
+      "hayatalouda777@gmail.com",
       "رمز التحقق الخاص بك في Fluenzy",
       verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
     );
