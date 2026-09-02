@@ -218,15 +218,15 @@ router.get("/teacher", authenticateToken, async (req: any, res) => {
   }
 });
 
-// PATCH  /session/:id // this one the TEACHER uses it
+// PATCH  /session/:id
 router.patch("/:id", authenticateToken, async (req: any, res) => {
   try {
-    const teacher = await prisma.teacher.findUnique({
-      where: { userId: req.user.id },
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
     });
 
-    if (!teacher) {
-      return res.status(404).json({ error: "Teacher profile not found" });
+    if (!user) {
+      return res.status(404).json({ error: "user profile not found" });
     }
 
     const { id } = req.params;
@@ -239,41 +239,52 @@ router.patch("/:id", authenticateToken, async (req: any, res) => {
       return res.status(404).json({ error: "Session not found" });
     }
 
-    if (existingSession.teacherId !== teacher.id) {
-      return res
-        .status(403)
-        .json({ error: "You are not the teacher for this session" });
-    }
-
     const data = getData(SessionUpdateSchema, req);
     if (!data) {
       return res.status(400).json({ error: "Invalid input" });
     }
 
-    const student = await prisma.student.findUnique({
-      where: { id: existingSession.studentId },
+    // Get the teacher record for this user (if they are a teacher)
+    const teacher = await prisma.teacher.findUnique({
+      where: { userId: user.id },
     });
 
-    if (!student) {
-      return res.status(404).json({ error: "user profile not found" });
+    // Get the student record for this user (if they are a student)
+    const student = await prisma.student.findUnique({
+      where: { userId: user.id },
+    });
+
+    if (user.role === "TEACHER") {
+      if (!teacher || existingSession.teacherId !== teacher.id) {
+        return res
+          .status(403)
+          .json({ error: "You are not the teacher for this session" });
+      }
+    }
+    if (user.role === "STUDENT") {
+      if (!student || existingSession.studentId !== student.id) {
+        return res
+          .status(403)
+          .json({ error: "You are not the student for this session" });
+      }
     }
 
     const sessionTransaction = await prisma.transaction.findUnique({
       where: { sessionId: id },
     });
     if (!sessionTransaction) {
-      return res.status(404).json({ error: "Transaction nopt found" });
+      return res.status(404).json({ error: "Transaction not found" });
     }
 
     const teacherUser = await prisma.user.findUnique({
-      where: { id: teacher.userId },
+      where: { id: existingSession.teacherId },
     });
     if (!teacherUser) {
       return res.status(404).json({ error: "user profile not found" });
     }
 
     const studentUser = await prisma.user.findUnique({
-      where: { id: student.userId },
+      where: { id: existingSession.studentId },
     });
     if (!studentUser) {
       return res.status(404).json({ error: "user profile not found" });
@@ -310,10 +321,9 @@ router.patch("/:id", authenticateToken, async (req: any, res) => {
           },
         });
         const teacherEarn = updatedTransaction.teacherEarn ?? 0;
-        const teacherBalance = teacherUser?.balance;
-
+        const teacherBalance = teacherUser?.balance ?? 0;
         await tx.user.update({
-          where: { id: teacher.userId },
+          where: { id: teacherUser.id },
           data: { balance: teacherBalance + teacherEarn },
         });
         return { updatedTransaction, updatedSession };
@@ -328,10 +338,10 @@ router.patch("/:id", authenticateToken, async (req: any, res) => {
           },
         });
 
-        const studentBalance = studentUser?.balance;
+        const studentBalance = studentUser?.balance ?? 0;
 
         await tx.user.update({
-          where: { id: student.userId },
+          where: { id: studentUser.id },
           data: {
             balance: studentBalance + updatedTransaction.scheduledAmount,
           },
