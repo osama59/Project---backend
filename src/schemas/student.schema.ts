@@ -18,7 +18,7 @@ export const StudentUpdateSchema = z.object({
   languages: z.array(
     z.object({
       name: z.string(),
-      level: z.number().min(0).max(5),
+      level: z.number().min(0).max(6),
       languageType: z.enum(["SPEAK", "LEARN"]),
     }),
   ),

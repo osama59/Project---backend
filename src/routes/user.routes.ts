@@ -4,7 +4,6 @@ import { authenticateToken, generateToken, getData } from "./helper";
 import bcrypt from "bcryptjs";
 import { ChangePwdSchema, ResetPwdSchema } from "../schemas/auth.schema";
 import { LoginSchema, WithDrawSchema } from "../schemas/user.schema";
-import { use } from "react";
 
 const router = Router();
 

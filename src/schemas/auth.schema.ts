@@ -5,7 +5,7 @@ export const GoogleRegisterSchema = z.object({
   idToken: z.string(),
 
   // USER FIELD
-  birthDate: z.date(),
+  birthDate: z.iso.datetime({ message: "Invalid date format. Use ISO 8601." }),
   origin: z.string(),
   timeZone: z.string(),
   subjects: z.array(z.string()),
@@ -13,7 +13,7 @@ export const GoogleRegisterSchema = z.object({
     .array(
       z.object({
         name: z.string(),
-        level: z.number().min(0).max(5),
+        level: z.number().min(0).max(6),
         languageType: z.enum(["SPEAK", "TEACH", "LEARN"]),
       }),
     )
