@@ -306,56 +306,29 @@ router.patch("/:id", authenticateToken, async (req: any, res) => {
 
       //TRANSITION SECTION
       if (data.status == "COMPLETED") {
-        const scheduledDuration =
-          Math.abs(
-            existingSession.endTime.getTime() -
-              existingSession.startTime.getTime(),
-          ) /
-          (1000 * 60);
-        const realEndTime = new Date(data.realEndTime);
-        const realStartTime = new Date(data.realStartTime);
-        const activeDuration =
-          (realEndTime.getTime() - realStartTime.getTime()) / (1000 * 60);
-
-        const percentage = Math.min(activeDuration / scheduledDuration, 1);
-        const actualAmount = sessionTransaction.scheduledAmount * percentage;
-        const platformFee = sessionTransaction.platformFee;
-        const updatedTransaction = await tx.transaction.update({
-          where: { sessionId: id },
-          data: {
-            actualAmount: actualAmount,
-            teacherEarn: actualAmount * (1 - platformFee),
-            status: "RELEASED",
-          },
-        });
-        const teacherEarn = updatedTransaction.teacherEarn ?? 0;
-        const teacherBalance = teacherUser?.balance ?? 0;
-        await tx.user.update({
-          where: { id: teacherUser.id },
-          data: { balance: teacherBalance + teacherEarn },
-        });
+        const updatedTransaction = await completeSession(
+          tx,
+          existingSession,
+          sessionTransaction,
+          teacherUser,
+          studentUser,
+          data.realStartTime,
+          data.realEndTime,
+        );
         return { updatedTransaction, updatedSession };
       }
 
       // REFUND SECTION
       else if (data.status == "CANCELLED") {
-        const updatedTransaction = await tx.transaction.update({
-          where: { sessionId: id },
-          data: {
-            status: "REFUNDED",
-          },
-        });
-
-        const studentBalance = studentUser?.balance ?? 0;
-
-        await tx.user.update({
-          where: { id: studentUser.id },
-          data: {
-            balance: studentBalance + updatedTransaction.scheduledAmount,
-          },
-        });
+        const updatedTransaction = await cancelSession(
+          tx,
+          existingSession,
+          sessionTransaction,
+          studentUser,
+        );
         return { updatedTransaction, updatedSession };
       }
+      return { updatedSession };
     });
 
     res.json(result);
@@ -422,6 +395,68 @@ router.post("/:id/rate", authenticateToken, async (req: any, res) => {
   }
 });
 
+// HELPER FUNCTIONS SECTION
+async function completeSession(
+  tx: any,
+  session: any,
+  transaction: any,
+  teacherUser: any,
+  studentUser: any,
+  realStartTime: any,
+  realEndTime: any,
+) {
+  const scheduledDuration =
+    Math.abs(session.endTime.getTime() - session.startTime.getTime()) /
+    (1000 * 60);
 
+  const realStart = new Date(realStartTime);
+  const realEnd = new Date(realEndTime);
+  const activeDuration =
+    Math.abs(realEnd.getTime() - realStart.getTime()) / (1000 * 60);
+
+  const percentage = Math.min(activeDuration / scheduledDuration, 1);
+  const actualAmount = transaction.scheduledAmount * percentage;
+  const teacherEarn = actualAmount * (1 - transaction.platformFee);
+  const refundAmount = transaction.scheduledAmount - actualAmount;
+
+  // 1. Release money to teacher
+  const updatedTransaction = await tx.transaction.update({
+    where: { sessionId: session.id },
+    data: { actualAmount, teacherEarn, status: "RELEASED" },
+  });
+
+  // 2. Add teacher earnings
+  await tx.user.update({
+    where: { id: teacherUser.id },
+    data: { balance: (teacherUser.balance ?? 0) + teacherEarn },
+  });
+
+  // 3. Refund the unused amount to the student
+  await tx.user.update({
+    where: { id: studentUser.id },
+    data: { balance: (studentUser.balance ?? 0) + refundAmount },
+  });
+
+  return updatedTransaction;
+}
+
+async function cancelSession(
+  tx: any,
+  session: any,
+  transaction: any,
+  studentUser: any,
+) {
+  const updatedTransaction = await tx.transaction.update({
+    where: { sessionId: session.id },
+    data: { status: "REFUNDED" },
+  });
+
+  await tx.user.update({
+    where: { id: studentUser.id },
+    data: { balance: (studentUser.balance ?? 0) + transaction.scheduledAmount },
+  });
+
+  return updatedTransaction;
+}
 
 export default router;
