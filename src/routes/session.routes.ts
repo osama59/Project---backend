@@ -276,15 +276,23 @@ router.patch("/:id", authenticateToken, async (req: any, res) => {
       return res.status(404).json({ error: "Transaction not found" });
     }
 
-    const teacherUser = await prisma.user.findUnique({
+    const sessionTeacher = await prisma.teacher.findUnique({
       where: { id: existingSession.teacherId },
+    });
+
+    const sessionStudent = await prisma.student.findUnique({
+      where: { id: existingSession.studentId },
+    });
+
+    const teacherUser = await prisma.user.findUnique({
+      where: { id: sessionTeacher?.userId },
     });
     if (!teacherUser) {
       return res.status(404).json({ error: "user profile not found" });
     }
 
     const studentUser = await prisma.user.findUnique({
-      where: { id: existingSession.studentId },
+      where: { id: sessionStudent?.userId },
     });
     if (!studentUser) {
       return res.status(404).json({ error: "user profile not found" });
@@ -413,5 +421,7 @@ router.post("/:id/rate", authenticateToken, async (req: any, res) => {
     res.status(500).json({ error: "Failed to create rating" });
   }
 });
+
+
 
 export default router;
