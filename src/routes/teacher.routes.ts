@@ -231,6 +231,53 @@ router.get("/teachers", authenticateToken, async (req: any, res) => {
   }
 });
 
+// GET /teacher/:id/ratings?page=1&limit=10
+router.get("/:id/ratings", async (req: any, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const id = req.params.id;
+
+    const teacher = await prisma.teacher.findUnique({
+      where: { userId: id },
+    });
+
+    if (!teacher) {
+      return res.status(404).json({ error: "Teacher not found" });
+    }
+    const ratings = await prisma.rating.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+      where: {
+        teacherId: teacher.id,
+      },
+      include: {
+        student: {
+          select: {
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+                profileImageUrl: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    const total = await prisma.rating.count({
+      where: { teacherId: teacher.id },
+    });
+    res.json({
+      ratings,
+      total,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Failed to fetch ratings" });
+  }
+});
+
 // GET /teacher/:id/availability?startDate=2026-08-20&endDate=2026-08-30
 router.get("/:id/availability", async (req: any, res) => {
   try {
