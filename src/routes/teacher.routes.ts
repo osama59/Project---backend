@@ -111,7 +111,6 @@ router.get("/me", authenticateToken, async (req: any, res) => {
   try {
     const userId = req.user.id;
 
-    console.log("Token is correct ! : ", userId);
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { teacher: true, languages: true },
@@ -123,9 +122,25 @@ router.get("/me", authenticateToken, async (req: any, res) => {
 
     const { password, ...userWithoutPwd } = user;
 
-    console.log("user: ", user);
+    const ratings = await prisma.rating.findMany({
+      where: {
+        teacherId: user.teacher?.id,
+      },
+      select: {
+        rating: true,
+      },
+    });
 
-    res.json(userWithoutPwd);
+    var totalRating = 0;
+    var avgRating;
+    ratings.forEach((rating) => {
+      totalRating += rating.rating;
+    });
+    totalRating > 0
+      ? (avgRating = totalRating / ratings.length)
+      : (avgRating = 0);
+
+    res.json({ userWithoutPwd,avgRating});
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Failed to fetch profile" });
