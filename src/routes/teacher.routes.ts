@@ -80,21 +80,12 @@ router.post("/register", async (req, res) => {
       }
       return { user: { email: user.email }, teacher };
     });
-    console.log(verifyCode);
 
     const assetBaseUrl = process.env.ASSET_BASE_URL!;
-    // ------TEMP Double email test section------
 
     await sendEmail(
       `"Fluenzy" <noreply@fluenzy.me>`,
-      "aliazaldeeeen@gmail.com",
-      "رمز التحقق الخاص بك في Fluenzy",
-      verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
-    );
-
-    await sendEmail(
-      `"Fluenzy" <noreply@fluenzy.me>`,
-      "hayatalouda777@gmail.com",
+      data.email,
       "رمز التحقق الخاص بك في Fluenzy",
       verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
     );
@@ -140,7 +131,7 @@ router.get("/me", authenticateToken, async (req: any, res) => {
       ? (avgRating = totalRating / ratings.length)
       : (avgRating = 0);
 
-    res.json({ userWithoutPwd,avgRating});
+    res.json({ userWithoutPwd, avgRating });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Failed to fetch profile" });

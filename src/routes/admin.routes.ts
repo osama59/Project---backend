@@ -39,18 +39,9 @@ router.patch("/user/:id/status", authenticateToken, async (req: any, res) => {
     if (data.status === "APPROVED" && user.role === "TEACHER") {
       const assetBaseUrl = process.env.ASSET_BASE_URL!;
 
-      // ------TEMP Double email test section------
-
       await sendEmail(
         `"Fluenzy" <noreply@fluenzy.me>`,
-        "aliazaldeeeen@gmail.com",
-        "تم قبول طلبك في Fluenzy!",
-        teacherApprovalEmailHtml({ firstName: user.firstName, assetBaseUrl }),
-      );
-
-      await sendEmail(
-        `"Fluenzy" <noreply@fluenzy.me>`,
-        "hayatalouda777@gmail.com",
+        user.email,
         "تم قبول طلبك في Fluenzy!",
         teacherApprovalEmailHtml({ firstName: user.firstName, assetBaseUrl }),
       );

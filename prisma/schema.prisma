@@ -63,7 +63,7 @@ model Teacher {
   user                User           @relation(fields: [userId], references: [id])
   certificateImageUrl String?
   introText           String
-  introVideoUrl       String
+  introVideoUrl       String?
   hourPrice           Float
   availabilities      Availability[]
 

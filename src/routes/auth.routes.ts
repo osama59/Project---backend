@@ -232,21 +232,7 @@ router.post("/resend-verification", async (req, res) => {
 
     await sendEmail(
       `"Fluenzy" <noreply@fluenzy.me>`,
-      "aliazaldeeeen@gmail.com",
-      "رمز التحقق الخاص بك في Fluenzy",
-      verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
-    );
-
-    // await sendEmail(
-    //   `"Fluenzy" <noreply@fluenzy.me>`,
-    //   "alesarreema@gmail.com",
-    //   "رمز التحقق الخاص بك في Fluenzy",
-    //   verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
-    // );
-    
-    await sendEmail(
-      `"Fluenzy" <noreply@fluenzy.me>`,
-      "hayatalouda777@gmail.com",
+      user.email,
       "رمز التحقق الخاص بك في Fluenzy",
       verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
     );

@@ -65,20 +65,11 @@ router.post("/register", async (req, res) => {
       return { user: { email: user.email }, student };
     });
 
-    console.log(verifyCode);
     const assetBaseUrl = process.env.ASSET_BASE_URL!;
-    // ------TEMP Double email test section------
 
     await sendEmail(
       `"Fluenzy" <noreply@fluenzy.me>`,
-      "hayatalouda777@gmail.com",
-      "رمز التحقق الخاص بك في Fluenzy",
-      verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
-    );
-
-    await sendEmail(
-      `"Fluenzy" <noreply@fluenzy.me>`,
-      "aliazaldeeeen@gmail.com",
+      data.email,
       "رمز التحقق الخاص بك في Fluenzy",
       verificationEmailHtml({ code: verifyCode, assetBaseUrl }),
     );
